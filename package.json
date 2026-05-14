@@ -2,7 +2,7 @@
   "name": "a11y-ai-literacy-node-server-app",
   "version": "1.0.0",
   "type": "module",
-  "main": "App.js",
+  "main": "index.js",
   "scripts": {
     "start": "node App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
