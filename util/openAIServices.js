@@ -43,3 +43,21 @@ export const getFollowUpReply = async (userMessage) => {
 
   return response.choices[0].message.content;
 };
+
+export const getClue = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful reasoning agent",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};
