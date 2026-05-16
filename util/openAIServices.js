@@ -61,3 +61,22 @@ export const getClue = async (userMessage) => {
 
   return response.choices[0].message.content;
 };
+
+export const getExplanation = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a helpful agent generating explanation about an image description",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};

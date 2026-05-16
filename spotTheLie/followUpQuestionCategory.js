@@ -1,5 +1,5 @@
 export const followUpQuestionCategory = {
-  "Mixing up the facts": [
+  "Mixed-up fact": [
     {
       category: "Ask to Double-Check Facts",
       examples: [
@@ -21,7 +21,7 @@ export const followUpQuestionCategory = {
     },
   ],
 
-  "Making Things Up": [
+  "Made-up detail": [
     {
       category: "Ask for Evidence",
       examples: [

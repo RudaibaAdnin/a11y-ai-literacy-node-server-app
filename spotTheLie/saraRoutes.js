@@ -35,9 +35,9 @@ const chooseHallucinationType = () => {
 
 const chooseReplyTypePrompt = () => {
   const ReplyTypePrompt = [
-    { replyType: "accurate", prompt: accuratePrompt, weight: 0.3 },
-    { replyType: "irrelevance", prompt: irrelevancePrompt, weight: 0.35 },
-    { replyType: "misfocus", prompt: misfocusPrompt, weight: 0.35 },
+    { replyType: "accurate", prompt: accuratePrompt, weight: 0.5 },
+    { replyType: "irrelevance", prompt: irrelevancePrompt, weight: 0.25 }, //Off-topic answer
+    { replyType: "misfocus", prompt: misfocusPrompt, weight: 0.25 }, //Missed the main point
   ];
 
   const totalWeight = ReplyTypePrompt.reduce(
