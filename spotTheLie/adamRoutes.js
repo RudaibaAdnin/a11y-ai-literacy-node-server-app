@@ -1,7 +1,88 @@
+import { getExplanation } from "../util/openAIServices.js";
+
+const parseResponse = (response) => JSON.parse(response);
+
+const buildPromptForImageDescription = (imageDescription, imageHallucination) =>
+  `
+Given an array of AI description sentences and a hallucination sentence in that array,
+rewrite the entire description in your own words.
+
+Rules:
+- Keep EXACTLY the same number of sentences as the original description.
+- Include the corrected version of the hallucination sentence.
+- Use simple language for children ages 10-14.
+- Return ONLY raw JSON.
+
+Input:
+Description: ${JSON.stringify(imageDescription)}
+Hallucination: ${JSON.stringify(imageHallucination)}
+
+Return this exact JSON shape:
+{
+  "newDescription": ["<rewritten sentence 1>", "<rewritten sentence 2>"],
+  "updatedHallucination": "<rewritten corrected hallucination sentence>"
+}
+`;
+
+const buildPromptForSummaryDifferences = (saraText, adamText) =>
+  `
+You are comparing two image descriptions written by Adam and Sara.
+
+Instructions:
+- Summarize only the differences.
+- For each difference, start with "Adam..." and contrast with "Sara..."
+- Mention changes in details, spatial descriptions, adjectives, tone, or atmosphere.
+- Do not restate the full descriptions.
+- Do not evaluate quality.
+- Return AT MOST 5 bullet points.
+- Keep each bullet one concise sentence.
+- Use simple language for children ages 10-14.
+
+Input:
+Adam: ${JSON.stringify(adamText)}
+Sara: ${JSON.stringify(saraText)}
+
+Return only the bullet list as plain text.
+`;
+
+const adamRoutes = (app) => {
+  app.post("/api/adam-description", async (req, res) => {
+    try {
+      const { imageDescription, imageHallucination } = req.body;
+
+      const response = await getExplanation(
+        buildPromptForImageDescription(imageDescription, imageHallucination),
+      );
+
+      res.json(parseResponse(response));
+    } catch (error) {
+      console.error("Error generating Adam description:", error);
+      res.status(500).json({ error: "Failed to generate Adam description." });
+    }
+  });
+
+  app.post("/api/adam-summary-differences", async (req, res) => {
+    try {
+      const { saraText, adamText } = req.body;
+
+      const response = await getExplanation(
+        buildPromptForSummaryDifferences(saraText, adamText),
+      );
+
+      res.json({ summaryDifferences: response });
+    } catch (error) {
+      console.error("Error generating summary differences:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to generate summary differences." });
+    }
+  });
+};
+
+export default adamRoutes;
+
 // import {
-//   getFollowUpQuestions,
-//   getFollowUpReply,
-//   getClue,
+//   getExplanation
 // } from "../util/openAIServices.js";
 
 //generate image descriptions
