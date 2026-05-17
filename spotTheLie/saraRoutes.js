@@ -174,7 +174,7 @@ const saraRoutes = (app) => {
       );
 
       const parsedResponse = JSON.parse(response);
-      console.log(parsedResponse);
+      //console.log(parsedResponse);
 
       res.json({
         followUpQuestionType: parsedResponse.type,
@@ -196,7 +196,7 @@ const saraRoutes = (app) => {
       );
 
       const parsedResponse = JSON.parse(response);
-      console.log(parsedResponse);
+      //console.log(parsedResponse);
 
       res.json({
         followUpQuestionType: parsedResponse.type,
@@ -224,7 +224,7 @@ const saraRoutes = (app) => {
       const response = await getFollowUpReply(userMessage);
       const followUpReply = response;
 
-      console.log(followUpReply);
+      //console.log(followUpReply);
       res.json({
         replyType: chosenReplyTypePrompt.replyType,
         followUpReply,
@@ -248,7 +248,7 @@ const saraRoutes = (app) => {
       );
 
       const parsedResponse = JSON.parse(response);
-      console.log(parsedResponse);
+      //console.log(parsedResponse);
 
       res.json({
         followUpQuestionType: parsedResponse.type,
@@ -271,7 +271,7 @@ const saraRoutes = (app) => {
         buildPromptForClue(imageDescription, imageHallucinationLine),
       );
 
-      console.log(response);
+      //console.log(response);
 
       res.json({
         clue: response,

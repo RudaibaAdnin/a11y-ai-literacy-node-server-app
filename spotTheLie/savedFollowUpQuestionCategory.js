@@ -1,29 +1,29 @@
 export const followUpQuestionCategory = {
   "Mixed-up facts": [
     {
-      category: "Ask Sara to Check the Fact Again",
+      category: "Ask to Double-Check Facts",
       examples: [
         "Check the color again and describe it.",
         "Check the shape again and describe it.",
       ],
     },
     {
-      category: "Ask for Clear Details About the Fact",
+      category: "Ask for More Concrete Details about a Fact",
       examples: [
-        "What exact color is the shirt?",
+        "What is the exact color of the shirt?",
         "List all the colors you see on the shirt.",
         "Name each pattern you can find on the shirt.",
       ],
     },
     {
-      category: "Check if the Detail Stays the Same",
+      category: "Checking Consistency within a Detail",
       examples: ["Are all parts of the shirt the same color?"],
     },
   ],
 
   "Made-up details": [
     {
-      category: "Ask Sara for Evidence",
+      category: "Ask for Evidence",
       examples: [
         "Where in the image do you see that?",
         "Is this written on the label or somewhere, or are you guessing?",
@@ -32,14 +32,14 @@ export const followUpQuestionCategory = {
       ],
     },
     {
-      category: "Check if the Detail Fits the Image",
+      category: "Check for Context Mismatch",
       examples: [
-        "Are there enough details in the image to answer this?",
-        "Does this information fit with what is shown in the image?",
+        "Is there enough details in the image to answer this?",
+        "Does this information fits with the image context?",
       ],
     },
     {
-      category: "Ask Sara to Check the Detail Again",
+      category: "Check for Inconsistency over Time",
       examples: [
         "Describe this part again.",
         "Does the table actually exist in the image?",
@@ -49,25 +49,25 @@ export const followUpQuestionCategory = {
 
   "Wrong guess": [
     {
-      category: "Ask Sara to Explain the Steps",
+      category: "Ask for Reasoning Steps",
       examples: [
         "How did you figure out the region from the license plate?",
         "Explain your steps one by one.",
         "Which rule are you using to understand this?",
-        "Does each step follow from the one before it, or did you skip any steps?",
+        "Does each step follow from the one before it or did you skip any steps?",
       ],
     },
     {
-      category: "Ask Sara What It Sees and What It Is Guessing",
+      category: "Ask to Separate Interpretation from Assumption",
       examples: [
-        "What can you actually see in the image, and what part are you guessing?",
+        "What can you actually see in the image and what part are you guessing or inferring?",
         "Is this based only on the image, or on general knowledge?",
         "Could this mean something different in another situation?",
         "Would you know this without outside information?",
       ],
     },
     {
-      category: "Check Other Possible Answers",
+      category: "Check Other Possibilities",
       examples: [
         "Can you think of a case where this would mean something different?",
         "Could this mean something else?",
