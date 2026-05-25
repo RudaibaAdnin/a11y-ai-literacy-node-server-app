@@ -6,6 +6,43 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+export const getStoryReading = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are Mia, a helpful AI story-writing agent for children ages 10-14.",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};
+export const getStoryQuestions = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a helpful agent generating questions to create a story",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};
+
 export const getFollowUpQuestions = async (userMessage) => {
   const response = await openai.chat.completions.create({
     model: "gpt-4.1",
