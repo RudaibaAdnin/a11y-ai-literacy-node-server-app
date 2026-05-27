@@ -5,6 +5,36 @@ const parseResponse = (response) => JSON.parse(response);
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
 
+const normalizePlan = (plan = [], biasCategories, fallbackPlan) => {
+  const normalized = plan
+    .map((item) => {
+      const categoryName =
+        item.biasCategoryName || item.biasCategory?.name || item.biasCategory;
+
+      const biasCategory = biasCategories.find(
+        (category) => category.name === categoryName,
+      );
+
+      if (!biasCategory) return null;
+
+      return {
+        paragraphIndex: Number(item.paragraphIndex),
+        biasCategory,
+      };
+    })
+    .filter(
+      (item) =>
+        item &&
+        Number.isInteger(item.paragraphIndex) &&
+        item.paragraphIndex >= 0 &&
+        item.paragraphIndex < 6,
+    );
+
+  return normalized.length === biasCategories.length
+    ? normalized
+    : fallbackPlan;
+};
+
 const buildPromptForStoryReading = (
   storyTopic,
   storyTopicType,
@@ -19,32 +49,47 @@ Story topic: ${JSON.stringify(storyTopic)}
 Story planning answers: ${JSON.stringify(storyQuestionsAndAnswers)}
 
 Bias categories to include:
+${JSON.stringify(biasCategories)}
+
+Initial biased paragraph plan:
 ${JSON.stringify(
-  biasCategories.map((biasCategory) => ({
-    name: biasCategory.name,
-    meaning: biasCategory.meaning,
-    examples: biasCategory.examples,
+  biasedParagraphPlan.map((item) => ({
+    paragraphIndex: item.paragraphIndex,
+    biasCategoryName: item.biasCategory.name,
   })),
 )}
 
-Biased paragraph plan:
-${JSON.stringify(biasedParagraphPlan)}
-
 Write a story with exactly 6 paragraphs.
+Include at least two human characters. One should be disabled.
 Each paragraph should have about 3 short sentences.
 The full story should be playful, clear, and easy for children ages 10-14 to read.
 
-At least include one human character.
-Use the meaning and examples to understand each bias category.
-Include each bias category only in its assigned paragraphIndex.
-Each bias should appear in one paragraph only.
-Make the bias noticeable but not too obvious.
-Do not use slurs, hateful language, or the words "bias", "biased", or the bias category names.
-Paragraph indices start at 0.
+Rules:
+- At least include one human character.
+- Use the meaning and examples to understand each bias category.
+- Each bias category should appear in one paragraph only.
+- Make the bias noticeable but not too obvious.
+- Do not use slurs, hateful language, or the words "bias", "biased", or the bias category names.
+- Paragraph indices start at 0.
+- Before returning, recheck whether each planned paragraph really contains its assigned bias.
+- If needed, shuffle the paragraphIndex values in the final biasedParagraphPlan so the plan matches the story exactly.
 
 Return ONLY raw JSON in this exact shape:
 {
-  "storyParagraphs": ["<paragraph 1>", "<paragraph 2>", "<paragraph 3>", "<paragraph 4>", "<paragraph 5>", "<paragraph 6>"]
+  "storyParagraphs": [
+    "<paragraph 1>",
+    "<paragraph 2>",
+    "<paragraph 3>",
+    "<paragraph 4>",
+    "<paragraph 5>",
+    "<paragraph 6>"
+  ],
+  "biasedParagraphPlan": [
+    {
+      "paragraphIndex": 0,
+      "biasCategoryName": "<category name>"
+    }
+  ]
 }
 `;
 
@@ -62,13 +107,13 @@ const storyReadingRoutes = (app) => {
         return res.status(400).json({ error: "Missing bias categories." });
       }
 
-      const biasedParagraphIndices = pickRandom(
+      const paragraphIndices = pickRandom(
         [0, 1, 2, 3, 4, 5],
         biasCategories.length,
       );
 
-      const biasedParagraphPlan = biasCategories.map((biasCategory, index) => ({
-        paragraphIndex: biasedParagraphIndices[index],
+      const initialPlan = biasCategories.map((biasCategory, index) => ({
+        paragraphIndex: paragraphIndices[index],
         biasCategory,
       }));
 
@@ -79,14 +124,19 @@ const storyReadingRoutes = (app) => {
             storyTopicType,
             storyQuestionsAndAnswers,
             biasCategories,
-            biasedParagraphPlan,
+            initialPlan,
           ),
         ),
       );
 
+      const biasedParagraphPlan = normalizePlan(
+        parsed.biasedParagraphPlan,
+        biasCategories,
+        initialPlan,
+      );
+
       res.json({
         storyParagraphs: parsed.storyParagraphs || [],
-        biasedParagraphIndices,
         biasedParagraphPlan,
       });
     } catch (error) {

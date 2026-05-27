@@ -8,6 +8,7 @@ import adamRoutes from "./spotTheLie/adamRoutes.js";
 import storyQuestionRoutes from "./spotTheBias/storyQuestionRoutes.js";
 import storyReadingRoutes from "./spotTheBias/storyReadingRoutes.js";
 import storyAliceRoutes from "./spotTheBias/storyAliceRoutes.js";
+import storyCraftPromptRoutes from "./spotTheBias/storyCraftPromptRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -21,5 +22,6 @@ reviewRoutes(app);
 storyQuestionRoutes(app);
 storyReadingRoutes(app);
 storyAliceRoutes(app);
+storyCraftPromptRoutes(app);
 
 app.listen(process.env.PORT || 4000);

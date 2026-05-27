@@ -6,6 +6,44 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+export const getRephrasedParagraph = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are Mia, a helpful AI agent which rephrases paragraph to remove bias for children ages 10-14.",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};
+
+export const getCraftPromptSuggestions = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are Mia, a helpful AI prompt craft helper agent for children ages 10-14.",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};
+
 export const getStoryReading = async (userMessage) => {
   const response = await openai.chat.completions.create({
     model: "gpt-4.1",
