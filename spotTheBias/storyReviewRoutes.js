@@ -36,19 +36,6 @@ Return ONLY raw JSON in this exact shape:
 }
 `;
 
-const buildPromptForPromptHelpsRephrase = (rephrasePrompt) => `
-You explain why a rephrase prompt can help improve a biased paragraph.
-Use simple language for children ages 10-14. No jargon.
-
-INPUT:
-- Rephrase prompt: ${JSON.stringify(rephrasePrompt)}
-
-Return ONLY raw JSON in this exact shape:
-{
-  "explanation": "<exactly 2 short sentences explaining how this prompt helps rephrase the paragraph>"
-}
-`;
-
 const buildPromptForQuestionHelpsDetect = (followUpQuestion) => `
 You explain why a follow-up question can help detect bias in a story paragraph.
 Use simple language for children ages 10-14. No jargon.
@@ -60,6 +47,19 @@ Return ONLY raw JSON in this exact shape:
 {
   "explanation": "<exactly 2 short sentences explaining how this question helps detect bias>",
   "example": "<one similar follow-up question>"
+}
+`;
+
+const buildPromptForPromptHelpsRephrase = (rephrasePrompt) => `
+You explain why a rephrase prompt can help improve a biased paragraph for an an AI tool.
+Use simple language for children ages 10-14. No jargon.
+
+INPUT:
+- Rephrase prompt: ${JSON.stringify(rephrasePrompt)}
+
+Return ONLY raw JSON in this exact shape:
+{
+  "explanation": "<exactly 3 short sentences explaining how this prompt helps an AI tool rephrase the paragraph a biased paragraph>"
 }
 `;
 

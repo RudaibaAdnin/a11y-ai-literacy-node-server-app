@@ -46,14 +46,17 @@ Make sure the categories exactly match the 3 category titles above.
 `;
 };
 
-const buildPromptForRephrasedParagraph = (paragraph, prompt) => `
+const buildPromptForRephrasedParagraph = (paragraph, prompt, category) => `
 You are a story revision helper for children ages 10-14.
 
 Original paragraph:
 ${JSON.stringify(paragraph)}
 
 Child's revision prompt:
-${JSON.stringify(prompt)}
+${JSON.stringify(prompt)} 
+
+Prompt category:
+ ${JSON.stringify(category)}
 
 Rewrite the paragraph using the child's prompt.
 Keep the meaning of the story, but reduce biased wording.
@@ -95,14 +98,14 @@ const storyCraftPromptRoutes = (app) => {
 
   app.post("/api/rephrase-paragraph", async (req, res) => {
     try {
-      const { paragraph, prompt } = req.body;
+      const { paragraph, prompt, category } = req.body;
 
       if (!paragraph || !prompt) {
         return res.status(400).json({ error: "Missing paragraph or prompt." });
       }
 
       const rephrasedParagraph = await getRephrasedParagraph(
-        buildPromptForRephrasedParagraph(paragraph, prompt),
+        buildPromptForRephrasedParagraph(paragraph, prompt, category),
       );
 
       res.json({ rephrasedParagraph });
