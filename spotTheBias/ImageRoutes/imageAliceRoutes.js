@@ -122,6 +122,18 @@ Return only the reply as a string.
 `;
 
 const imageAliceRoutes = (app) => {
+  app.get("/api/image-alice-routes-test", (req, res) => {
+    res.json({
+      status: "ok",
+      message: "Image Alice text routes are connected.",
+      routes: [
+        "GET /api/image-alice-routes-test",
+        "POST /api/image-bias-clue",
+        "POST /api/image-bias-followup-questions",
+        "POST /api/image-bias-followup-reply",
+      ],
+    });
+  });
   app.post("/api/image-bias-clue", async (req, res) => {
     try {
       const { imageDescriptionParagraph, biasCategoryImage } = req.body;
