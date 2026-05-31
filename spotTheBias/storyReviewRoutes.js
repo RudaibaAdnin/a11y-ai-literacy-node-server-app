@@ -102,23 +102,6 @@ const storyReviewRoutes = (app) => {
     }
   });
 
-  app.post("/api/story-review-how-prompt-helps-rephrase", async (req, res) => {
-    try {
-      const { rephrasePrompt } = req.body;
-
-      const parsed = parseResponse(
-        await getExplanation(buildPromptForPromptHelpsRephrase(rephrasePrompt)),
-      );
-
-      res.json({
-        explanation: parsed.explanation || "",
-      });
-    } catch (error) {
-      console.error("Error explaining rephrase prompt:", error);
-      res.status(500).json({ error: "Failed to explain rephrase prompt." });
-    }
-  });
-
   app.post("/api/story-review-how-question-helps-detect", async (req, res) => {
     try {
       const { followUpQuestion } = req.body;
@@ -136,6 +119,23 @@ const storyReviewRoutes = (app) => {
     } catch (error) {
       console.error("Error explaining follow-up question:", error);
       res.status(500).json({ error: "Failed to explain follow-up question." });
+    }
+  });
+
+  app.post("/api/story-review-how-prompt-helps-rephrase", async (req, res) => {
+    try {
+      const { rephrasePrompt } = req.body;
+
+      const parsed = parseResponse(
+        await getExplanation(buildPromptForPromptHelpsRephrase(rephrasePrompt)),
+      );
+
+      res.json({
+        explanation: parsed.explanation || "",
+      });
+    } catch (error) {
+      console.error("Error explaining rephrase prompt:", error);
+      res.status(500).json({ error: "Failed to explain rephrase prompt." });
     }
   });
 };
