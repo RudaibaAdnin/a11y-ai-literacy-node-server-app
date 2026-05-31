@@ -109,6 +109,47 @@ Return ONLY raw JSON:
 `;
 
 const imageReadingRoutes = (app) => {
+  app.get("/api/image-routes-test", (req, res) => {
+    res.json({
+      status: "ok",
+      message: "Image reading routes are connected.",
+      routes: [
+        "GET /api/image-routes-test",
+        "GET /api/image-env-test",
+        "GET /api/image-model-test",
+        "POST /api/generate-image-prompt",
+        "POST /api/generate-image-description",
+      ],
+    });
+  });
+
+  app.get("/api/image-env-test", (req, res) => {
+    res.json({
+      status: "ok",
+      hasOpenAIKey: Boolean(process.env.OPENAI_API_KEY),
+      message: process.env.OPENAI_API_KEY
+        ? "OPENAI_API_KEY exists in backend environment."
+        : "OPENAI_API_KEY is missing in backend environment.",
+    });
+  });
+
+  // Use this only for debugging. It calls OpenAI image generation and may cost money.
+  app.get("/api/image-model-test", async (req, res) => {
+    try {
+      const imageBuffer = await generateImagePNG(
+        "A simple child-friendly cartoon image of a yellow star on a plain white background.",
+      );
+
+      res.setHeader("Content-Type", "image/jpeg");
+      res.send(imageBuffer);
+    } catch (error) {
+      console.error("Image model test failed:", error);
+      res.status(500).json({
+        error: "Image model test failed.",
+        message: error.message,
+      });
+    }
+  });
   app.post("/api/generate-image-prompt", async (req, res) => {
     try {
       const { storyParagraphs, selectedImageBiasCategories } = req.body;
