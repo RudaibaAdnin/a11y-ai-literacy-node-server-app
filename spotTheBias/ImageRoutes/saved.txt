@@ -1,0 +1,404 @@
+import {
+  getImagePrompt,
+  getImageDescriptionReading,
+  generateImagePNG,
+  describePNGImage,
+} from "../../util/openAIServices.js";
+
+const parseResponse = (response) => JSON.parse(response);
+
+const pickRandom = (items, count) =>
+  [...items].sort(() => Math.random() - 0.5).slice(0, count);
+
+const normalizePlan = (plan = [], biasCategories, fallbackPlan) => {
+  const normalized = plan
+    .map((item) => {
+      const name =
+        item.biasCategoryName || item.biasCategory?.name || item.biasCategory;
+
+      const biasCategory = biasCategories.find(
+        (category) => category.name === name,
+      );
+      if (!biasCategory) return null;
+
+      return {
+        imageDescriptionParagraphIndex: Number(
+          item.imageDescriptionParagraphIndex,
+        ),
+        biasCategory,
+      };
+    })
+    .filter(
+      (item) =>
+        item &&
+        Number.isInteger(item.imageDescriptionParagraphIndex) &&
+        item.imageDescriptionParagraphIndex >= 0 &&
+        item.imageDescriptionParagraphIndex < 3,
+    );
+
+  return normalized.length === biasCategories.length
+    ? normalized
+    : fallbackPlan;
+};
+
+const buildPromptForImagePrompt = (storyParagraphs, biasCategories) => `
+You are Mia, an image prompt writer for children ages 10-14.
+
+Story paragraphs:
+${JSON.stringify(storyParagraphs)}
+
+Image bias category to include:
+${JSON.stringify(biasCategories)}
+
+Create two prompts:
+1. displayedPrompt: a short child-friendly short prompt based on one story character. Example, "generate image of Sara, a disabled student"). Do not use bias in the sentence. 
+2. originalPrompt: the real image generation prompt. It should use the displayedPrompt idea and include bias similar to Image bias category.
+
+Return JSON only:
+{
+  "displayedPrompt": "",
+  "originalPrompt": ""
+}
+`;
+
+const buildPromptForImageDescription = (
+  originalPrompt,
+  biasCategories,
+  plan,
+) => `
+You are Mia, an image description writer for children ages 10-14.
+
+Image generation prompt:
+${JSON.stringify(originalPrompt)}
+
+Image bias category to include:
+${JSON.stringify(biasCategories)}
+
+Planned biased paragraph:
+${JSON.stringify(
+  plan.map((item) => ({
+    imageDescriptionParagraphIndex: item.imageDescriptionParagraphIndex,
+    biasCategoryName: item.biasCategory.name,
+  })),
+)}
+
+Write exactly 3 short paragraphs.
+Include the image bias in exactly 1 planned paragraph.
+Do not include the image bias in the other paragraphs.
+Do not use the words "bias", "biased", or the bias category name.
+Paragraph indices start at 0.
+
+Return JSON only:
+{
+  "imageDescriptionParagraphs": ["", "", ""],
+  "biasedImageDescriptionParagraphPlan": [
+    {
+      "imageDescriptionParagraphIndex": 0,
+      "biasCategoryName": ""
+    }
+  ]
+}
+`;
+
+const getImagePromptAndPlan = async (storyParagraphs, biasCategories) => {
+  const indices = pickRandom([0, 1, 2], biasCategories.length);
+
+  const initialPlan = biasCategories.map((biasCategory, index) => ({
+    imageDescriptionParagraphIndex: indices[index],
+    biasCategory,
+  }));
+
+  const imagePrompt = parseResponse(
+    await getImagePrompt(
+      buildPromptForImagePrompt(storyParagraphs, biasCategories),
+    ),
+  );
+
+  return { imagePrompt, initialPlan };
+};
+
+const logImageDescription = async (imageBuffer, biasCategories, plan) => {
+  const description = await describePNGImage({
+    imageBuffer,
+    prompt: `
+    You are Mia, an image description writer for children ages 10-14.
+
+Image bias category included in the image:
+${JSON.stringify(biasCategories)}
+
+Planned biased paragraph:
+${JSON.stringify(
+  plan.map((item) => ({
+    imageDescriptionParagraphIndex: item.imageDescriptionParagraphIndex,
+    biasCategoryName: item.biasCategory.name,
+  })),
+)}
+
+Write exactly 3 short paragraphs. Each paragraph should have about 4 short sentences.
+- Include the description of image bias in exactly 1 planned paragraph.
+- Do not include the image bias in the other paragraphs.
+- Do not use the words "bias", "biased", or the bias category name.
+- Paragraph indices start at 0.
+- Before returning, recheck whether each planned paragraph really contains its assigned bias.
+- If needed, shuffle the paragraphIndex values in the final biasedParagraphPlan so the plan matches the story exactly.
+
+Return JSON only:
+{
+  "imageDescriptionParagraphs": [
+    "<paragraph 1>",
+    "<paragraph 2>",
+    "<paragraph 3>",
+    ],
+  "biasedImageDescriptionParagraphPlan": [
+    {
+      "imageDescriptionParagraphIndex": 0,
+      "biasCategoryName": "<category name>"
+    }
+  ]
+}
+`,
+  });
+
+  console.log("PNG image description:", description);
+};
+
+const imageReadingRoutes = (app) => {
+  app.post("/api/generate-image", async (req, res) => {
+    try {
+      const { prompt, biasCategories, plan } = req.body;
+      console.log(prompt);
+      if (!prompt) {
+        return res.status(400).json({ error: "Missing prompt." });
+      }
+
+      const imageBuffer = await generateImagePNG(prompt);
+
+      res.setHeader("Content-Type", "image/png");
+      res.send(imageBuffer);
+      console.log(imageBuffer);
+
+      await logImageDescription(imageBuffer, biasCategories, plan);
+    } catch (error) {
+      console.error("Error generating image:", error);
+      res.status(500).json({ error: "Failed to generate image." });
+    }
+  });
+
+  //app.post("/api/generate-image-prompt", async (req, res) => {
+
+  //app.post("/api/generate-image-description", async (req, res) => {
+
+  app.post("/api/image-reading", async (req, res) => {
+    try {
+      const { storyParagraphs, biasCategories } = req.body;
+
+      if (!storyParagraphs?.length || !biasCategories?.length) {
+        return res.status(400).json({ error: "Missing image reading data." });
+      }
+
+      const { imagePrompt, initialPlan } = await getImagePromptAndPlan(
+        storyParagraphs,
+        biasCategories,
+      );
+
+      const parsed = parseResponse(
+        await getImageDescriptionReading(
+          buildPromptForImageDescription(
+            imagePrompt.originalPrompt,
+            biasCategories,
+            initialPlan,
+          ),
+        ),
+      );
+
+      console.log(parsed);
+
+      res.json({
+        imagePrompt: {
+          displayedPrompt: imagePrompt.displayedPrompt || "",
+          originalPrompt: imagePrompt.originalPrompt || "",
+          rephrasedPrompt: "",
+          isRephrased: false,
+        },
+        imageDescriptionParagraphs: parsed.imageDescriptionParagraphs || [],
+        biasedImageDescriptionParagraphPlan: normalizePlan(
+          parsed.biasedImageDescriptionParagraphPlan,
+          biasCategories,
+          initialPlan,
+        ),
+      });
+    } catch (error) {
+      console.error("Error getting image reading:", error);
+      res.status(500).json({ error: "Failed to get image reading." });
+    }
+  });
+};
+
+export default imageReadingRoutes;
+
+
+import {
+  getImagePrompt,
+  generateImagePNG,
+  describePNGImage,
+} from "../../util/openAIServices.js";
+
+const parseResponse = (response) => JSON.parse(response);
+
+const pickRandom = (items, count) =>
+  [...items].sort(() => Math.random() - 0.5).slice(0, count);
+
+const normalizePlan = (plan = [], biasCategories, fallbackPlan) => {
+  const normalized = plan
+    .map((item) => {
+      const name =
+        item.biasCategoryName || item.biasCategory?.name || item.biasCategory;
+
+      const biasCategory = biasCategories.find(
+        (category) => category.name === name,
+      );
+      if (!biasCategory) return null;
+
+      return {
+        imageDescriptionParagraphIndex: Number(
+          item.imageDescriptionParagraphIndex,
+        ),
+        biasCategory,
+      };
+    })
+    .filter(
+      (item) =>
+        item &&
+        Number.isInteger(item.imageDescriptionParagraphIndex) &&
+        item.imageDescriptionParagraphIndex >= 0 &&
+        item.imageDescriptionParagraphIndex < 3,
+    );
+
+  return normalized.length === biasCategories.length
+    ? normalized
+    : fallbackPlan;
+};
+
+
+const buildPromptForImageGenerationPrompt = (
+  storyParagraphs,
+  selectedImageBiasCategories,
+) => `
+You are Mia, an image prompt writer for children ages 10-14.
+
+Story paragraphs:
+${JSON.stringify(storyParagraphs)}
+
+Image bias category to include:
+${JSON.stringify(selectedImageBiasCategories)}
+
+Create two prompts:
+1. displayedPrompt: a short child-friendly short prompt based on one story character. Example, "generate image of Sara, a disabled student"). 
+2. originalPrompt: the real image generation prompt. It should use the displayedPrompt idea and include bias similar to the mentioned image bias category.
+
+Return JSON only:
+{
+  "displayedPrompt": "",
+  "originalPrompt": ""
+}
+`;
+
+const buildPromptForImageDescriptionParagraphs = (
+  selectedImageBiasCategories,
+  biasedImageDescriptionParagraphPlan,
+) => `
+    You are Mia, an image description writer for children ages 10-14.
+
+Image bias category included in the image:
+${JSON.stringify(biasCategories)}
+
+Planned biased paragraph:
+${JSON.stringify(
+  biasedImageDescriptionParagraphPlan.map((item) => ({
+    imageDescriptionParagraphIndex: item.imageDescriptionParagraphIndex,
+    biasCategoryName: item.biasCategory.name,
+  })),
+)}
+
+Write exactly 3 short paragraphs. Each paragraph should have about 4 short sentences.
+- Include the description of image bias in exactly 1 planned paragraph.
+- Do not include the image bias in the other paragraphs.
+- Do not use the words "bias", "biased", or the bias category name.
+- Paragraph indices start at 0.
+- Before returning, recheck whether each planned paragraph really contains its assigned bias.
+- If needed, shuffle the paragraphIndex values in the final biasedParagraphPlan so the plan matches the story exactly.
+
+Return JSON only:
+{
+  "imageDescriptionParagraphs": [
+    "<paragraph 1>",
+    "<paragraph 2>",
+    "<paragraph 3>",
+    ],
+  "biasedImageDescriptionParagraphPlan": [
+    {
+      "imageDescriptionParagraphIndex": 0,
+      "biasCategoryName": "<category name>"
+    }
+  ]
+}
+`;
+
+
+
+const getImageDescription = async (imageBuffer, prompt) => {
+  const description = await describePNGImage({
+    imageBuffer,
+    prompt});
+
+  console.log("PNG image description:", description);
+};
+
+const imageReadingRoutes = (app) => {
+  app.post("/api/generate-image", async (req, res) => {
+    try {
+      const { originalPrompt } = req.body;
+      console.log(originalPrompt);
+      if (!originalPrompt) {
+        return res.status(400).json({ error: "Missing prompt." });
+      }
+
+      const imageBuffer = await generateImagePNG(originalPrompt);
+
+      res.setHeader("Content-Type", "image/png");
+      res.send(imageBuffer);
+      console.log(imageBuffer);
+    } catch (error) {
+      console.error("Error generating image:", error);
+      res.status(500).json({ error: "Failed to generate image." });
+    }
+  });
+
+  //app.post("/api/generate-image-prompt", async (req, res) => {
+    const { storyParagraphs, selectedImageBiasCategories } = req.body;
+     if (!storyParagraphs?.length || !selectedImageBiasCategories?.length) {
+        return res.status(400).json({ error: "Missing image reading data." });
+      }
+      getImagePrompt(buildPromptForImageGenerationPrompt(storyParagraphs, selectedImageBiasCategories))
+    //will send to frontend: imagePrompt: {
+          displayedPrompt: imagePrompt.displayedPrompt || "",
+          originalPrompt: imagePrompt.originalPrompt || "",
+
+
+
+
+  //app.post("/api/generate-image-description", async (req, res) => {
+        //const {selectedImageBiasCategories} = req.body;
+        //     const initialPlan = biasCategories.map((biasCategory, index) => ({
+       // paragraphIndex: paragraphIndices[index],
+      //  biasCategory,
+      //}));
+        //describePNGImage(buildPromptForImageGenerationPrompt(selectedImageBiasCategories, initialPlan)
+        //will send to frontend:  imageDescriptionParagraphs: parsed.imageDescriptionParagraphs || [],
+       // biasedImageDescriptionParagraphPlan
+
+
+ 
+};
+
+export default imageReadingRoutes;

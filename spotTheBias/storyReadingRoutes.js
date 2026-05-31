@@ -60,12 +60,11 @@ ${JSON.stringify(
 )}
 
 Write a story with exactly 6 paragraphs.
-Include at least two human characters. One should be disabled.
 Each paragraph should have about 3 short sentences.
 The full story should be playful, clear, and easy for children ages 10-14 to read.
 
 Rules:
-- At least include one human character.
+- Include at least two human characters. One should be disabled. Mention the disability details a bit.
 - Use the meaning and examples to understand each bias category.
 - Each bias category should appear in one paragraph only.
 - Make the bias noticeable but not too obvious.
