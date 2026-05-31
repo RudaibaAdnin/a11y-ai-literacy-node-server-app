@@ -2,7 +2,7 @@ import {
   getImagePrompt,
   generateImagePNG,
   describePNGImage,
-} from "../../util/openAIServices.js";
+} from "../util/openAIServices.js";
 
 const parseResponse = (response) => JSON.parse(response);
 
@@ -108,7 +108,7 @@ Return ONLY raw JSON:
 }
 `;
 
-const imageReadingRoutes = (app) => {
+const imageRoutes = (app) => {
   app.get("/api/image-routes-test", (req, res) => {
     res.json({
       status: "ok",
@@ -258,4 +258,4 @@ const imageReadingRoutes = (app) => {
   });
 };
 
-export default imageReadingRoutes;
+export default imageRoutes;

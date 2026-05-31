@@ -13,9 +13,9 @@ import storyAliceRoutes from "./spotTheBias/storyAliceRoutes.js";
 import storyCraftPromptRoutes from "./spotTheBias/storyCraftPromptRoutes.js";
 import storyReviewRoutes from "./spotTheBias/storyReviewRoutes.js";
 
-import imageReadingRoutes from "./spotTheBias/imageRoutes/imageReadingRoutes.js";
-import imageAliceRoutes from "./spotTheBias/imageRoutes/imageAliceRoutes.js";
-import imageReviewRoutes from "./spotTheBias/imageRoutes/imageReviewRoutes.js";
+import imageRoutes from "./spotTheBias/imageRoutes.js";
+import imageAliceRoutes from "./spotTheBias/imageAliceRoutes.js";
+import imageReviewRoutes from "./spotTheBias/imageReviewRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -33,7 +33,7 @@ storyAliceRoutes(app);
 storyCraftPromptRoutes(app);
 storyReviewRoutes(app);
 
-imageReadingRoutes(app);
+imageRoutes(app);
 imageAliceRoutes(app);
 imageReviewRoutes(app);
 

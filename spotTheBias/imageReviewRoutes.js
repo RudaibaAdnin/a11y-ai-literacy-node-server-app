@@ -1,4 +1,4 @@
-import { getExplanation } from "../../util/openAIServices.js";
+import { getExplanation } from "../util/openAIServices.js";
 
 const parseResponse = (response) => JSON.parse(response);
 

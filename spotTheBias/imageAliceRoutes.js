@@ -2,8 +2,8 @@ import {
   getFollowUpQuestions,
   getFollowUpReply,
   getClue,
-} from "../../util/openAIServices.js";
-import { follow_up_categories } from "../../util/storyFollowUpCategories.js";
+} from "../util/openAIServices.js";
+import { follow_up_categories } from "../util/storyFollowUpCategories.js";
 
 const parseResponse = (response) => JSON.parse(response);
 
