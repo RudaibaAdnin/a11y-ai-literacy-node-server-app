@@ -16,6 +16,7 @@ import storyReviewRoutes from "./spotTheBias/storyReviewRoutes.js";
 import imageRoutes from "./spotTheBias/imageRoutes.js";
 import imageAliceRoutes from "./spotTheBias/imageAliceRoutes.js";
 import imageReviewRoutes from "./spotTheBias/imageReviewRoutes.js";
+import imageCraftPromptRoutes from "./spotTheBias/imageCraftPromptRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -36,5 +37,6 @@ storyReviewRoutes(app);
 imageRoutes(app);
 imageAliceRoutes(app);
 imageReviewRoutes(app);
+imageCraftPromptRoutes(app);
 
 app.listen(process.env.PORT || 4000);
