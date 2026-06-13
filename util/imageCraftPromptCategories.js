@@ -1,5 +1,5 @@
 export const image_craft_prompt_categories = {
-  "Shows disabled people as sad or less capable": {
+  "Shows the disabled person as sad, lonely, or not active": {
     promptSuggestions: [
       {
         promptSuggestionCategory: "Use a positive or neutral tone",
@@ -13,29 +13,31 @@ export const image_craft_prompt_categories = {
           "Generate an image using showing people with disabilities with friends, family, or other people instead of always showing them alone.",
       },
       {
-        promptSuggestionCategory: "Show people doing everyday activities",
+        promptSuggestionCategory:
+          "Show disabled people doing everyday activities",
         promptSuggestionExample:
           "Generate an image showing people with disabilities doing normal activities, like shopping, working, or playing.",
       },
     ],
   },
 
-  "Shows disabled people as less important or superhero": {
+  "Focuses too much on tools, hospitals, or makes the person seem unreal": {
     promptSuggestions: [
       {
         promptSuggestionCategory: "Show the whole person, not just the tool",
         promptSuggestionExample:
-          "Generate an image showing the full person, not only their assistive tool, so it does not look like the tool is all they are.",
+          "Generate an image showing the full person, not only their assistive tool, so it does not look like the tool is all they are. Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care",
       },
       {
-        promptSuggestionCategory: "Do not always use hospital-like places",
+        promptSuggestionCategory:
+          "Show everyday life, not hospital-like places",
         promptSuggestionExample:
           "Generate an image...Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care.",
       },
       {
         promptSuggestionCategory: "Show everyday life, not superpowers",
         promptSuggestionExample:
-          "Generate an image by showing people with disabilities doing normal, everyday things, not acting like superheroes.",
+          "Generate an image by showing people with disabilities doing normal, everyday things, not acting like superheroes. Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care",
       },
     ],
   },

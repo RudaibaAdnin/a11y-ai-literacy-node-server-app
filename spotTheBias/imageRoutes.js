@@ -256,6 +256,8 @@ const imageRoutes = (app) => {
       res.status(500).json({ error: "Failed to get image description." });
     }
   });
+
+  //app.post("/api/generate-rephrased-image-description", async (req, res) => {
 };
 
 export default imageRoutes;

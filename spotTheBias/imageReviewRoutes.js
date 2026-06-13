@@ -48,16 +48,21 @@ Return ONLY raw JSON in this exact shape:
 }
 `;
 
-const buildPromptForImagePromptHelpsRephrase = (rephrasedPromptImage) => `
-You explain why a prompt can help make an AI-generated image fairer.
-Use simple language for children ages 10-14. No jargon.
+const buildPromptForImagePromptHelpsRephrase = (
+  rephrasedPromptImage,
+  displayedPromptImage,
+) => `
+You explain why a rewritten image prompt can help make an AI-generated image fairer.
+Use simple language for children ages 10-14. No jargon. Do NOT invent facts.
 
-INPUT:
-- Rephrased image prompt: ${JSON.stringify(rephrasedPromptImage)}
+INPUTS:
+- Original image prompt shown to the child: ${JSON.stringify(displayedPromptImage)}
+- Rewritten image prompt: ${JSON.stringify(rephrasedPromptImage)}
 
 Return ONLY raw JSON in this exact shape:
 {
-  "explanation": "<exactly 3 short sentences explaining how this prompt helps make the image fairer>"
+  "originalPromptLimitation": "<exactly 2 short sentence explaining what was limited, unclear, vague, not specific, or missing in the original image prompt. And how AI can create bias because of it.>",
+  "explanation": "<exactly 3 short sentences explaining how the rewritten prompt helps make the image fairer>"
 }
 `;
 
@@ -131,15 +136,19 @@ const imageReviewRoutes = (app) => {
 
   app.post("/api/image-review-how-prompt-helps-rephrase", async (req, res) => {
     try {
-      const { rephrasedPromptImage } = req.body;
+      const { rephrasedPromptImage, displayedPromptImage } = req.body;
 
       const parsed = parseResponse(
         await getExplanation(
-          buildPromptForImagePromptHelpsRephrase(rephrasedPromptImage),
+          buildPromptForImagePromptHelpsRephrase(
+            rephrasedPromptImage,
+            displayedPromptImage,
+          ),
         ),
       );
 
       res.json({
+        originalPromptLimitation: parsed.originalPromptLimitation || "",
         explanation: parsed.explanation || "",
       });
     } catch (error) {
