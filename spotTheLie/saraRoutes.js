@@ -132,6 +132,7 @@ const buildPromptForClueHallucinationFollowup = (
     "- When referring to the hallucination, use the hallucinated sentence itself\n" +
     "- Matched to ONE of the listed follow-up question categories\n\n" +
     "- Avoid repeating the same phrasing or tone across questions.\n" +
+    "- Do not use the word description in the reply.\n" +
     "- Use language for children aged 10 - 14 years.\n\n" +
     `Description: ${JSON.stringify(imageDescription)}\n` +
     `Hallucination sentence: ${JSON.stringify(imageHallucinationLine)}\n` +
@@ -156,6 +157,7 @@ const buildPromptForClue = (imageDescription, imageHallucinationLine) => {
     "The sentence should hint that:\n" +
     "- AI tools sometimes make assumptions or add extra details not in the source\n\n" +
     "Do not use the hint provided directly. Use your own words.\n" +
+    "- Do not use the word description in the reply.\n" +
     "The sentence should be brief and avoid technical jargon.\n" +
     "Use language for children aged 10 - 14 years.\n" +
     "Return only the clue sentence as a string.\n\n" +
