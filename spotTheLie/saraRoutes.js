@@ -8,25 +8,28 @@ import { followUpQuestionCategory } from "./followUpQuestionCategory.js";
 const accuratePrompt =
   "Given an image description and a follow-up question asked by a blind or low-vision user, provide a clear, direct response. Use a natural and informative tone.\n" +
   "Help improve understanding or highlight uncertainty without making assumptions.\n" +
-  "Make sure the reply is only about the description.\n" +
+  "Make sure the reply is only about the image.\n" +
+  "Do not use the word description in the reply.\n" +
   "Return only the reply as a string.\n" +
   "Keep the reply short, not more than 60 words, and conversational.\n" +
-  "Use language for children above age 10 years.\n";
+  "Use language for children aged 10 - 14 years.\n";
 
 const irrelevancePrompt =
   "Given an image description and a follow-up question asked by a blind or low-vision user, provide a response that is irrelevant.\n" +
   "Ignore the actual intent of the question and include unrelated details from the description.\n" +
   "Return only the reply as a string.\n" +
+  "Do not use the word description in the reply.\n" +
   "Keep the reply short, not more than 60 words, and conversational.\n" +
-  "Use language for children above age 10 years.\n";
+  "Use language for children aged 10 - 14 years.\n";
 
 const misfocusPrompt =
   "Given an image description and a follow-up question asked by a blind or low-vision user, provide a response that follows the question structure but focuses on a secondary detail from the description instead of the main intent.\n" +
   "Do not invent unrelated facts.\n" +
   "Make sure the reply is only about the description.\n" +
+  "Do not use the word description in the reply.\n" +
   "Return only the reply as a string.\n" +
   "Keep the reply short, not more than 60 words, and conversational.\n" +
-  "Use language for children above age 10 years.\n";
+  "Use language for children aged 10 - 14 years.\n";
 
 const chooseHallucinationType = () => {
   const types = Object.keys(followUpQuestionCategory);
@@ -67,7 +70,7 @@ const buildPromptForEntireDescriptionFollowup = (imageDescription) => {
     "Generate EXACTLY 3 follow-up questions.\n" +
     "Each question MUST match ONE of these question categories and feel similar in tone to the examples.\n" +
     "Keep questions short (not more than 20 words) and conversational.\n\n" +
-    "Use language for children above age 10 years.\n\n" +
+    "Use language for children aged 10 - 14 years.\n\n" +
     "Categories + example style:\n" +
     chosenCategories
       .map(
@@ -95,7 +98,7 @@ const buildPromptForCurrentLineFollowup = (
     "Generate EXACTLY 3 follow-up questions.\n" +
     "Each question MUST match ONE of these question categories and feel similar in tone to the examples.\n" +
     "Keep questions short (not more than 20 words) and conversational.\n\n" +
-    "Use language for children above age 10 years.\n\n" +
+    "Use language for children aged 10 - 14 years.\n\n" +
     "Categories + example style:\n" +
     chosenCategories
       .map(
@@ -129,7 +132,7 @@ const buildPromptForClueHallucinationFollowup = (
     "- When referring to the hallucination, use the hallucinated sentence itself\n" +
     "- Matched to ONE of the listed follow-up question categories\n\n" +
     "- Avoid repeating the same phrasing or tone across questions.\n" +
-    "- Use language for children above age 10 years.\n\n" +
+    "- Use language for children aged 10 - 14 years.\n\n" +
     `Description: ${JSON.stringify(imageDescription)}\n` +
     `Hallucination sentence: ${JSON.stringify(imageHallucinationLine)}\n` +
     (clue ? `Clue: ${JSON.stringify(clue)}\n` : "") +
@@ -154,7 +157,7 @@ const buildPromptForClue = (imageDescription, imageHallucinationLine) => {
     "- AI tools sometimes make assumptions or add extra details not in the source\n\n" +
     "Do not use the hint provided directly. Use your own words.\n" +
     "The sentence should be brief and avoid technical jargon.\n" +
-    "Use language for children above age 10 years.\n" +
+    "Use language for children aged 10 - 14 years.\n" +
     "Return only the clue sentence as a string.\n\n" +
     `Hallucination: ${JSON.stringify(imageHallucinationLine)}\n` +
     `Description: ${JSON.stringify(imageDescription)}`
