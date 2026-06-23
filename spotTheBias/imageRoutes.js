@@ -108,6 +108,30 @@ Return ONLY raw JSON:
 }
 `;
 
+const buildPromptForRephrasedImageDescriptionParagraphs = (rephrasedPrompt) => `
+You are Mia, an image description writer for children ages 10-14.
+
+The image was generated from this rewritten prompt:
+${JSON.stringify(rephrasedPrompt)}
+
+Write exactly 3 short image-description paragraphs.
+Each paragraph should have about 4 short sentences.
+
+Rules:
+- Use the image as the main source.
+- Do not add hidden bias on purpose.
+- Do not mention the prompt.
+- Use simple, child-friendly language.
+
+Return ONLY raw JSON:
+{
+  "imageDescriptionParagraphs": [
+    "<paragraph 1>",
+    "<paragraph 2>",
+    "<paragraph 3>"
+  ]
+}
+`;
 const imageRoutes = (app) => {
   app.get("/api/image-routes-test", (req, res) => {
     res.json({
@@ -257,7 +281,36 @@ const imageRoutes = (app) => {
     }
   });
 
-  //app.post("/api/generate-rephrased-image-description", async (req, res) => {
+  app.post("/api/generate-rephrased-image-description", async (req, res) => {
+    try {
+      const { rephrasedPrompt } = req.body;
+
+      if (!rephrasedPrompt) {
+        return res.status(400).json({ error: "Missing rephrased prompt." });
+      }
+
+      const imageBuffer = await generateImagePNG(rephrasedPrompt);
+
+      const parsed = parseResponse(
+        await describePNGImage({
+          imageBuffer,
+          prompt:
+            buildPromptForRephrasedImageDescriptionParagraphs(rephrasedPrompt),
+        }),
+      );
+
+      res.json({
+        imageBase64: `data:image/png;base64,${imageBuffer.toString("base64")}`,
+        imageDescriptionParagraphs: parsed.imageDescriptionParagraphs || [],
+        biasedImageDescriptionParagraphPlan: [],
+      });
+    } catch (error) {
+      console.error("Error getting rephrased image description:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to get rephrased image description." });
+    }
+  });
 };
 
 export default imageRoutes;
