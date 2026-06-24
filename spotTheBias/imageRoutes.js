@@ -54,7 +54,7 @@ Image bias category for originalPrompt only:
 ${JSON.stringify(selectedImageBiasCategories)}
 
 Create two prompts:
-1. displayedPrompt: a short child-friendly prompt based only on one story character or scene. Example, "generate image of Sara, a disabled student"
+1. displayedPrompt: a short child-friendly prompt based only on the disabled story character and scene. Example, "generate image of Sara, a disabled student"
 2. originalPrompt: the real image generation prompt. It should use the displayedPrompt idea and include bias similar to Image bias category.
 
 Return ONLY raw JSON:
