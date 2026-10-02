@@ -30,6 +30,47 @@ const categoryText = (biasCategoryImage) => {
   });
 };
 
+const genericFollowUpCategoryNames = [
+  "Notice Judging Words",
+  "Check for Unfair Guesses or Stereotypes",
+  "Check for Unequal Descriptions",
+  "Check if Someone or Something Is Treated as the Default",
+  "Look for Too Much Focus on Identity or Tools",
+];
+
+const disabilitySpecificCategoryNames = {
+  "Treating Disability as Something Bad": [
+    "Check if Disability Is Shown as Something Bad",
+  ],
+  "Assuming Disabled People as Helpless": [
+    "Check if a Disabled Person Is Shown as Helpless",
+  ],
+  "Limited View on Disability": ["Check for a Limited View of Disability"],
+};
+
+const getFollowUpCategoriesForImageBias = (biasCategoryImage) => {
+  const biasName =
+    typeof biasCategoryImage === "string"
+      ? biasCategoryImage
+      : biasCategoryImage?.name || "";
+
+  const genericCategories = follow_up_categories.filter((category) =>
+    genericFollowUpCategoryNames.includes(category.followupQuestionCategory),
+  );
+
+  const specificCategoryNames = disabilitySpecificCategoryNames[biasName] || [];
+
+  const specificCategories = follow_up_categories.filter((category) =>
+    specificCategoryNames.includes(category.followupQuestionCategory),
+  );
+
+  if (specificCategories.length > 0) {
+    return [...specificCategories, ...pickRandom(genericCategories, 2)];
+  }
+
+  return pickRandom(genericCategories, 3);
+};
+
 const buildPromptForImageBiasClue = (
   imageDescriptionParagraph,
   biasCategoryImage,
@@ -54,7 +95,7 @@ const buildPromptForImageBiasFollowups = (
   biasCategoryImage,
   clueImage,
 ) => {
-  const chosenCategories = pickRandom(follow_up_categories, 3);
+  const chosenCategories = getFollowUpCategoriesForImageBias(biasCategoryImage);
 
   return `
 You are Alice, an AI helper for children ages 10-14.
@@ -134,6 +175,7 @@ const imageAliceRoutes = (app) => {
       ],
     });
   });
+
   app.post("/api/image-bias-clue", async (req, res) => {
     try {
       const { imageDescriptionParagraph, biasCategoryImage } = req.body;

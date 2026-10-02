@@ -66,7 +66,10 @@ The full story should be playful, clear, and easy for children ages 10-14 to rea
 Rules:
 - Include at least two human characters. One should be disabled. Mention the disability details a bit.
 - Use the meaning and examples to understand each bias category.
-- Each bias category should appear in one paragraph only.
+- Include every provided bias category exactly once.
+- Each bias category must appear in exactly one paragraph.
+- Do not intentionally include any of the other listed bias categories in the remaining paragraphs.
+- A paragraph should contain at most one planned bias category.
 - Make the bias noticeable but not too obvious.
 - Do not use slurs, hateful language, or the words "bias", "biased", or the bias category names.
 - Paragraph indices start at 0.

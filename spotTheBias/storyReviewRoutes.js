@@ -8,58 +8,87 @@ import { getExplanation } from "../util/openAIServices.js";
 const parseResponse = (response) => JSON.parse(response);
 
 const buildPromptForExplainBiasType = (paragraph, biasCategory) => `
-You explain why a story paragraph matches a bias type.
-Use simple language for children ages 10-14. No jargon. Do NOT invent facts.
+You explain why a paragraph matches a specific bias type.
 
-INPUTS:
-- Paragraph: ${JSON.stringify(paragraph)}
-- Bias category: ${JSON.stringify(biasCategory)}
+Use simple language for children ages 10-14.
+Use only evidence that is actually present in the paragraph.
+Do not invent intentions, feelings, or facts.
+
+Paragraph:
+${JSON.stringify(paragraph)}
+
+Bias category:
+${JSON.stringify(biasCategory)}
+
+Explain how something in the paragraph connects to the meaning of the
+provided bias category.
 
 Return ONLY raw JSON in this exact shape:
 {
   "explanation": "<exactly 2 short sentences explaining why this paragraph shows this bias type>",
-  "example": "<one short example of the same bias type, unrelated to this paragraph>"
+  "example": "<one short NEW example of the same bias type that is unrelated to this paragraph>"
 }
 `;
 
 const buildPromptForAnythingWrong = (paragraph) => `
-You help a child think about whether a story paragraph may have bias.
-Use simple language for children ages 10-14. No jargon. Do NOT invent facts.
+You help a child think about whether a paragraph may contain an unfair
+assumption or unequal description.
 
-INPUT:
-- Paragraph: ${JSON.stringify(paragraph)}
+Use simple language for children ages 10-14.
+Do not invent information that is not in the paragraph.
+
+Paragraph:
+${JSON.stringify(paragraph)}
+
+Possible bias types are ONLY:
+- Treating Disability as Something Bad
+- Assuming Disabled People as Helpless
+- Inspiration Bias
+- Limited View on Disability
+- Gender Bias
+- Age Bias
+- Cultural Bias
+- Racial Bias
+
+If none clearly fits, return "No clear bias".
 
 Return ONLY raw JSON in this exact shape:
 {
-  "explanation": "<exactly 2 short sentences explaining what might be wrong or why it seems okay>",
-  "possibleBiasType": "<name of possible bias type, or 'No clear bias'>"
+  "explanation": "<exactly 2 short sentences explaining what might be unfair or why no clear bias is present>",
+  "possibleBiasType": "<one bias type from the list above, or 'No clear bias'>"
 }
 `;
 
 const buildPromptForQuestionHelpsDetect = (followUpQuestion) => `
-You explain why a follow-up question can help detect bias in a story paragraph.
-Use simple language for children ages 10-14. No jargon.
+You explain how a follow-up question can help someone notice unfair
+assumptions, stereotypes, unequal descriptions, or missing perspectives
+in a paragraph.
 
-INPUT:
-- Follow-up question: ${JSON.stringify(followUpQuestion)}
+Use simple language for children ages 10-14.
+Do not use jargon.
+
+Follow-up question:
+${JSON.stringify(followUpQuestion)}
 
 Return ONLY raw JSON in this exact shape:
 {
-  "explanation": "<exactly 2 short sentences explaining how this question helps detect bias>",
-  "example": "<one similar follow-up question>"
+  "explanation": "<exactly 2 short sentences explaining what this question helps the reader check>",
+  "example": "<one different follow-up question that checks for a similar problem>"
 }
 `;
 
 const buildPromptForPromptHelpsRephrase = (rephrasePrompt) => `
-You explain why a rephrase prompt can help improve a biased paragraph for an an AI tool.
-Use simple language for children ages 10-14. No jargon.
+You explain why a rephrase prompt can help an AI make a biased paragraph fairer.
 
-INPUT:
-- Rephrase prompt: ${JSON.stringify(rephrasePrompt)}
+Use simple language for children ages 10-14.
+Do not use jargon.
+
+Rephrase prompt:
+${JSON.stringify(rephrasePrompt)}
 
 Return ONLY raw JSON in this exact shape:
 {
-  "explanation": "<exactly 3 short sentences explaining how this prompt helps an AI tool rephrase the paragraph a biased paragraph>"
+  "explanation": "<exactly 2 short sentences explaining how this prompt helps the AI notice and change unfair assumptions, stereotypes, or unequal descriptions>"
 }
 `;
 

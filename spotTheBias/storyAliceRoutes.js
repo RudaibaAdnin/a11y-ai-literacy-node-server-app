@@ -26,6 +26,45 @@ const categoryText = (biasCategory) => {
   });
 };
 
+const genericFollowUpCategoryNames = [
+  "Notice Judging Words",
+  "Check for Unfair Guesses or Stereotypes",
+  "Check for Unequal Descriptions",
+  "Check if Someone or Something Is Treated as the Default",
+  "Look for Too Much Focus on Identity or Tools",
+];
+
+const disabilitySpecificCategoryNames = {
+  "Treating Disability as Something Bad": [
+    "Check if Disability Is Shown as Something Bad",
+  ],
+  "Assuming Disabled People as Helpless": [
+    "Check if a Disabled Person Is Shown as Helpless",
+  ],
+  "Limited View on Disability": ["Check for a Limited View of Disability"],
+};
+
+const getFollowUpCategoriesForBias = (biasCategory) => {
+  const biasName =
+    typeof biasCategory === "string" ? biasCategory : biasCategory?.name || "";
+
+  const genericCategories = follow_up_categories.filter((category) =>
+    genericFollowUpCategoryNames.includes(category.followupQuestionCategory),
+  );
+
+  const specificCategoryNames = disabilitySpecificCategoryNames[biasName] || [];
+
+  const specificCategories = follow_up_categories.filter((category) =>
+    specificCategoryNames.includes(category.followupQuestionCategory),
+  );
+
+  if (specificCategories.length > 0) {
+    return [...specificCategories, ...pickRandom(genericCategories, 2)];
+  }
+
+  return pickRandom(genericCategories, 3);
+};
+
 const buildPromptForBiasClue = (paragraph, biasCategory) => `
 You are Alice, an AI clue helper for children ages 10-14.
 
@@ -43,7 +82,7 @@ Return only the clue as a string.
 `;
 
 const buildPromptForBiasFollowups = (paragraph, biasCategory, clue) => {
-  const chosenCategories = pickRandom(follow_up_categories, 3);
+  const chosenCategories = getFollowUpCategoriesForBias(biasCategory);
 
   return `
 You are Alice, an AI helper for children ages 10-14.

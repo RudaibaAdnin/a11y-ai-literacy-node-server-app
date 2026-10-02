@@ -1,67 +1,154 @@
 export const image_craft_prompt_categories = {
-  "Shows the disabled person as sad, lonely, or not active": {
+  "Treating Disability as Something Bad": {
     promptSuggestions: [
       {
-        promptSuggestionCategory: "Use a positive or neutral tone",
+        promptSuggestionCategory: "Use a Positive or Neutral Tone",
         promptSuggestionExample:
-          "Generate an image using brighter backgrounds and show people looking okay or happy, not always sad or in pain.",
+          "Generate an image without assuming a disabled person must look sad, lonely, or unhappy. Show the person with a neutral or positive expression when it fits the scene.",
+      },
+      {
+        promptSuggestionCategory: "Show Disabled People Joining Activities",
+        promptSuggestionExample:
+          "Generate an image showing the disabled person taking part in activities with other people instead of making disability the reason they are left out.",
       },
       {
         promptSuggestionCategory:
-          "Show disabled people with others, not always alone",
+          "Do Not Show Disability as Something That Must Go Away",
         promptSuggestionExample:
-          "Generate an image using showing people with disabilities with friends, family, or other people instead of always showing them alone.",
-      },
-      {
-        promptSuggestionCategory:
-          "Show disabled people doing everyday activities",
-        promptSuggestionExample:
-          "Generate an image showing people with disabilities doing normal activities, like shopping, working, or playing.",
+          "Generate an image without suggesting that the person needs to be cured, fixed, or changed in order to be happy or enjoy life.",
       },
     ],
   },
 
-  "Focuses too much on tools, hospitals, or makes the person seem unreal": {
+  "Assuming Disabled People as Helpless": {
     promptSuggestions: [
       {
-        promptSuggestionCategory: "Show the whole person, not just the tool",
+        promptSuggestionCategory:
+          "Avoid Showing the Disabled Person as Helpless",
         promptSuggestionExample:
-          "Generate an image showing the full person, not only their assistive tool, so it does not look like the tool is all they are. Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care",
+          "Generate an image showing the disabled person making choices, taking action, or doing things independently instead of showing them as helpless.",
+      },
+      {
+        promptSuggestionCategory: "Avoid Disability-Based Stereotypes",
+        promptSuggestionExample:
+          "Generate an image without assuming what the person can or cannot do just because they are disabled.",
       },
       {
         promptSuggestionCategory:
-          "Show everyday life, not hospital-like places",
+          "Describe Disabled and Non-Disabled People More Equally",
         promptSuggestionExample:
-          "Generate an image...Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care.",
-      },
-      {
-        promptSuggestionCategory: "Show everyday life, not superpowers",
-        promptSuggestionExample:
-          "Generate an image by showing people with disabilities doing normal, everyday things, not acting like superheroes. Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care",
+          "Generate an image without showing a disabled person as helpless while showing non-disabled people as independent or more capable.",
       },
     ],
   },
 
-  //   "Showing assistive technology unfairly bias": {
-  //     promptSuggestions: [
-  //       {
-  //         promptSuggestionCategory: "Make assistive tools look real",
-  //         promptSuggestionExample:
-  //           "Make sure assistive tools in pictures look like real ones people actually use.",
-  //       },
-  //       {
-  //         promptSuggestionCategory: "Show how people really use their tools",
-  //         promptSuggestionExample:
-  //           "Show assistive tools being used the right way in real life.",
-  //       },
-  //       {
-  //         promptSuggestionCategory: "Show modern, up-to-date assistive tools",
-  //         promptSuggestionExample:
-  //           "Show newer versions of assistive tools that people really use today, like modern hearing aids.",
-  //       },
-  //     ],
-  //   },
+  "Inspiration Bias": {
+    promptSuggestions: [
+      {
+        promptSuggestionCategory:
+          "Do Not Make Everyday Activities Look Different",
+        promptSuggestionExample:
+          "Generate an image without making a disabled person look extraordinary or inspirational just for doing an everyday activity.",
+      },
+      {
+        promptSuggestionCategory: "Focus on What the Person Is Actually Doing",
+        promptSuggestionExample:
+          "Generate an image that focuses on the person’s actions, interests, or goals instead of treating their disability itself as inspiring.",
+      },
+      {
+        promptSuggestionCategory: "Show Everyday Life Naturally",
+        promptSuggestionExample:
+          "Generate an image showing the disabled person doing everyday things in a natural way, without making the moment look like a special achievement only because they are disabled.",
+      },
+    ],
+  },
+
+  "Limited View on Disability": {
+    promptSuggestions: [
+      {
+        promptSuggestionCategory: "Show Different Ways Disability Can Look",
+        promptSuggestionExample:
+          "Generate an image without showing disability only through wheelchair use. Include different ways people may experience or represent disability when appropriate.",
+      },
+      {
+        promptSuggestionCategory: "Show the Whole Person, Not Just the Tool",
+        promptSuggestionExample:
+          "Generate an image showing the full person and what they are doing, not mainly their wheelchair, cane, guide dog, or other assistive tool.",
+      },
+      {
+        promptSuggestionCategory:
+          "Show Everyday Life, Not Only Medical Settings",
+        promptSuggestionExample:
+          "Generate an image showing disabled people in everyday places and activities instead of focusing mainly on hospitals, doctors, treatment, or medical equipment unless the scene is actually about healthcare.",
+      },
+    ],
+  },
 };
+
+// export const image_craft_prompt_categories = {
+//   "Shows the disabled person as sad, lonely, or not active": {
+//     promptSuggestions: [
+//       {
+//         promptSuggestionCategory: "Use a positive or neutral tone",
+//         promptSuggestionExample:
+//           "Generate an image using brighter backgrounds and show people looking okay or happy, not always sad or in pain.",
+//       },
+//       {
+//         promptSuggestionCategory:
+//           "Show disabled people with others, not always alone",
+//         promptSuggestionExample:
+//           "Generate an image using showing people with disabilities with friends, family, or other people instead of always showing them alone.",
+//       },
+//       {
+//         promptSuggestionCategory:
+//           "Show disabled people doing everyday activities",
+//         promptSuggestionExample:
+//           "Generate an image showing people with disabilities doing normal activities, like shopping, working, or playing.",
+//       },
+//     ],
+//   },
+
+//   "Focuses too much on tools, hospitals, or makes the person seem unreal": {
+//     promptSuggestions: [
+//       {
+//         promptSuggestionCategory: "Show the whole person, not just the tool",
+//         promptSuggestionExample:
+//           "Generate an image showing the full person, not only their assistive tool, so it does not look like the tool is all they are. Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care",
+//       },
+//       {
+//         promptSuggestionCategory:
+//           "Show everyday life, not hospital-like places",
+//         promptSuggestionExample:
+//           "Generate an image...Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care.",
+//       },
+//       {
+//         promptSuggestionCategory: "Show everyday life, not superpowers",
+//         promptSuggestionExample:
+//           "Generate an image by showing people with disabilities doing normal, everyday things, not acting like superheroes. Do not always show people with disabilities in hospitals or doctor’s offices unless the picture is really about medical care",
+//       },
+//     ],
+//   },
+
+//   "Showing assistive technology unfairly bias": {
+//     promptSuggestions: [
+//       {
+//         promptSuggestionCategory: "Make assistive tools look real",
+//         promptSuggestionExample:
+//           "Make sure assistive tools in pictures look like real ones people actually use.",
+//       },
+//       {
+//         promptSuggestionCategory: "Show how people really use their tools",
+//         promptSuggestionExample:
+//           "Show assistive tools being used the right way in real life.",
+//       },
+//       {
+//         promptSuggestionCategory: "Show modern, up-to-date assistive tools",
+//         promptSuggestionExample:
+//           "Show newer versions of assistive tools that people really use today, like modern hearing aids.",
+//       },
+//     ],
+//   },
+// };
 
 // export const image_bias_categories = {
 //   "Shows disabled people as sad or less capable": {

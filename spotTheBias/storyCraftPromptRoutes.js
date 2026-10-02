@@ -9,14 +9,57 @@ const parseResponse = (response) => JSON.parse(response);
 const pickRandom = (items, count) =>
   [...items].sort(() => Math.random() - 0.5).slice(0, count);
 
-const buildPromptForCraftPromptSuggestions = (paragraph) => {
-  const chosenCategories = pickRandom(craft_prompt_categories, 3);
+const genericCraftPromptCategoryNames = [
+  "Do not Use Judging Words",
+  "Remove Unfair Assumptions or Stereotypes",
+  "Make Descriptions More Equal",
+  "Do not Treat Someone or Something as the Default",
+  "Reduce Too Much Focus on Identity or Tools",
+];
+
+const disabilitySpecificCraftPromptCategoryNames = {
+  "Treating Disability as Something Bad": [
+    "Do not Show Disability as Something Bad",
+  ],
+  "Assuming Disabled People as Helpless": [
+    "Do not Show a Disabled Person as Helpless",
+  ],
+  "Limited View on Disability": ["Show a Broader View of Disability"],
+};
+
+const getCraftPromptCategoriesForBias = (biasCategory) => {
+  const biasName =
+    typeof biasCategory === "string" ? biasCategory : biasCategory?.name || "";
+
+  const genericCategories = craft_prompt_categories.filter((category) =>
+    genericCraftPromptCategoryNames.includes(category.promptSuggestionCategory),
+  );
+
+  const specificCategoryNames =
+    disabilitySpecificCraftPromptCategoryNames[biasName] || [];
+
+  const specificCategories = craft_prompt_categories.filter((category) =>
+    specificCategoryNames.includes(category.promptSuggestionCategory),
+  );
+
+  if (specificCategories.length > 0) {
+    return [...specificCategories, ...pickRandom(genericCategories, 2)];
+  }
+
+  return pickRandom(genericCategories, 3);
+};
+
+const buildPromptForCraftPromptSuggestions = (paragraph, biasCategory) => {
+  const chosenCategories = getCraftPromptCategoriesForBias(biasCategory);
 
   return `
 You are a prompt helper for children ages 10-14.
 
 Story paragraph:
 ${JSON.stringify(paragraph)}
+
+Hidden bias category:
+${JSON.stringify(biasCategory)}
 
 Suggest exactly 3 prompt-writing tips that help the child revise the paragraph to reduce bias.
 Each suggestion must use one of the 3 categories below.
@@ -68,14 +111,14 @@ Return only the rewritten paragraph as a string.
 const storyCraftPromptRoutes = (app) => {
   app.post("/api/craft-prompt-suggestions", async (req, res) => {
     try {
-      const { paragraph } = req.body;
+      const { paragraph, biasCategory } = req.body;
 
       if (!paragraph) {
         return res.status(400).json({ error: "Missing paragraph." });
       }
 
       const response = await getCraftPromptSuggestions(
-        buildPromptForCraftPromptSuggestions(paragraph),
+        buildPromptForCraftPromptSuggestions(paragraph, biasCategory),
       );
 
       const parsed = parseResponse(response);
