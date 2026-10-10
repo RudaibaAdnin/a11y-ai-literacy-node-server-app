@@ -40,17 +40,12 @@ The statements must be based on the specific selected paragraph.
 Important:
 - The paragraph may be biased or may not be biased.
 - Do not assume the paragraph definitely contains bias.
-- Do not tell the child whether the paragraph is biased.
-- Do not reveal any hidden answer.
 - Each statement should describe something the child could check in this paragraph.
-- A statement may point out that the paragraph seems to make an assumption, describe people differently, or treat something as normal or expected.
-- If that type of issue is not strongly present, phrase the statement as something the child could still examine.
+- A statement may point out that the paragraph seems to make an assumption, describe people unequally, or treat something as default.
+- If that type of issue is not strongly present, phrase the statement as something the child could still examine based on specific details from the paragraph.
 - Use simple child-friendly language for ages 10-14.
-- Write statements, NOT questions.
 - Keep each statement short and simple.
 - Do not use complicated sentence structures.
-- Base each statement on specific details from the paragraph.
-- Do not make all three statements sound definitely true.
 - Return exactly 3 items.
 - The category names must exactly match the category names provided above.
 
