@@ -81,8 +81,9 @@ The full story should be playful, clear, and easy for children ages 10-14 to rea
 
 Rules:
 - Include at least two human characters. One should be blind. Mention their disability details a bit.
+- if you are talking about race, gender, culture, age, disability, do not talk about these identities in the same paragraph. keep them in seperate paragraphs.
 - Use the provided examples to understand each bias category.
-- Do not use complex sentences (e.g., while, instead) to show comparison. Write simple and compound (e.g., and) sentences.
+- Do not use complex sentences (e.g., while, instead) to show comparison. Write simple sentences.
 - For each selected bias category, create the biased paragraph in an almost same or similar way to the provided examples.
 - Keep the type of assumption, treatment, description, or situation similar to the examples.
 - Adapt the characters, setting, actions, and details so the paragraph fits the story topic and story planning answers.

@@ -190,11 +190,11 @@ const storyBiasCheckingRoutes = (app) => {
        * They do not determine whether the paragraph
        * is actually one of the planned biased paragraphs.
        */
-      console.log("Bias reflection response:", {
-        selectedCategories,
-        selectedStatements,
-        typedAnswer,
-      });
+      // console.log("Bias reflection response:", {
+      //   selectedCategories,
+      //   selectedStatements,
+      //   typedAnswer,
+      // });
 
       /*
        * Always call OpenAI for a paragraph-specific

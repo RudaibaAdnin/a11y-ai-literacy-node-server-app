@@ -228,11 +228,11 @@ const imageBiasCheckingRoutes = (app) => {
         });
       }
 
-      console.log("Image bias reflection response:", {
-        selectedCategories,
-        selectedStatements,
-        typedAnswer,
-      });
+      // console.log("Image bias reflection response:", {
+      //   selectedCategories,
+      //   selectedStatements,
+      //   typedAnswer,
+      // });
 
       /*
        * Always call OpenAI so feedback is specific
