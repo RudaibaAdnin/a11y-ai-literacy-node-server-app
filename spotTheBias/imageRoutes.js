@@ -2,7 +2,10 @@ import {
   getImagePrompt,
   generateImagePNG,
   describePNGImage,
+  reviewImageBiases,
 } from "../util/openAIServices.js";
+
+import { story_bias_checking_categories } from "../util/storyBiasCheckingCategories.js";
 
 const parseResponse = (response) => JSON.parse(response);
 
@@ -41,6 +44,12 @@ const normalizePlan = (plan = [], biasCategories, fallbackPlan) => {
     : fallbackPlan;
 };
 
+const getBiasCheckingCategories = (biasCategories) =>
+  biasCategories.map((category) => ({
+    name: category.name,
+    Categories: story_bias_checking_categories[category.name]?.Categories || [],
+  }));
+
 const buildPromptForImageGenerationPrompt = (
   storyParagraphs,
   selectedImageBiasCategories,
@@ -54,7 +63,9 @@ Image bias category for originalPrompt only:
 ${JSON.stringify(selectedImageBiasCategories)}
 
 Create two prompts:
-1. displayedPrompt: a short child-friendly prompt based only on the disabled story character and scene. Example, "generate image of Sara, a disabled student"
+
+1. displayedPrompt: a short child-friendly prompt based only on the disabled story character and scene. Example, "generate image of Sara, a blind student"
+
 2. originalPrompt: the real image generation prompt. It should use the displayedPrompt idea and include bias similar to Image bias category.
 
 Return ONLY raw JSON:
@@ -82,6 +93,7 @@ ${JSON.stringify(
 )}
 
 Write exactly 3 short image-description paragraphs.
+
 Each paragraph should have about 4 short sentences.
 
 Rules:
@@ -91,6 +103,80 @@ Rules:
 - Do not use the words "bias", "biased", or the bias category names.
 - Paragraph indices start at 0.
 - Before returning, recheck that the final plan matches the paragraphs.
+
+Return ONLY raw JSON:
+{
+  "imageDescriptionParagraphs": [
+    "<paragraph 1>",
+    "<paragraph 2>",
+    "<paragraph 3>"
+  ],
+  "biasedImageDescriptionParagraphPlan": [
+    {
+      "imageDescriptionParagraphIndex": 0,
+      "biasCategoryName": "<category name>"
+    }
+  ]
+}
+`;
+
+const buildPromptForImageBiasReview = (
+  imageDescriptionParagraphs,
+  selectedImageBiasCategories,
+  biasedImageDescriptionParagraphPlan,
+) => `
+You are a careful AI image-description bias reviewer.
+
+Image description paragraphs:
+${JSON.stringify(imageDescriptionParagraphs)}
+
+Planned biased image-description paragraph plan:
+${JSON.stringify(
+  biasedImageDescriptionParagraphPlan.map((item) => ({
+    imageDescriptionParagraphIndex: item.imageDescriptionParagraphIndex,
+    biasCategoryName: item.biasCategory.name,
+  })),
+)}
+
+Bias checking categories:
+${JSON.stringify(getBiasCheckingCategories(selectedImageBiasCategories))}
+
+Review the image-description paragraphs and recheck whether each planned paragraph really contains its assigned bias.
+
+Rules:
+- Use the provided bias checking categories and descriptions to evaluate each planned paragraph.
+- Check whether each assigned paragraph contains at least one checking category for its assigned bias.
+- Also check the other image-description paragraphs in case the assigned bias actually appears in a different paragraph.
+- Each selected bias category must appear exactly once.
+- Each selected bias category must be assigned to the paragraph where it actually appears.
+- A paragraph should contain at most one selected bias category.
+- Keep exactly 3 image-description paragraphs.
+- Do not add new bias categories.
+- Do not remove any selected bias categories.
+
+If a planned paragraph already contains its assigned bias:
+- Keep the paragraph exactly the same.
+- Keep its imageDescriptionParagraphIndex the same.
+
+If the assigned bias is clearly present in another paragraph:
+- Keep the image-description paragraphs unchanged.
+- Update imageDescriptionParagraphIndex so it points to the correct paragraph.
+
+If the assigned bias is not clearly present in any paragraph:
+- Update only the planned paragraph for that bias.
+- Make the smallest possible change needed.
+- Keep the same people, objects, actions, setting, and image details.
+- Make the paragraph clearly match at least one checking category for the assigned bias.
+- Keep the bias noticeable but not too obvious.
+
+Important:
+- Do not rewrite paragraphs unless needed.
+- Do not change the main image description.
+- Do not invent major visual details that are not already described.
+- Do not use the words "bias", "biased", or the bias category names inside the image-description paragraphs.
+- Paragraph indices start at 0.
+- If needed, shuffle the imageDescriptionParagraphIndex values so the final plan matches the paragraphs.
+- Before returning, verify that every imageDescriptionParagraphIndex points to a paragraph that really contains its assigned bias.
 
 Return ONLY raw JSON:
 {
@@ -132,6 +218,7 @@ Return ONLY raw JSON:
   ]
 }
 `;
+
 const imageRoutes = (app) => {
   app.get("/api/image-routes-test", (req, res) => {
     res.json({
@@ -174,6 +261,7 @@ const imageRoutes = (app) => {
       });
     }
   });
+
   app.post("/api/generate-image-prompt", async (req, res) => {
     try {
       const { storyParagraphs, selectedImageBiasCategories } = req.body;
@@ -193,6 +281,7 @@ const imageRoutes = (app) => {
 
       // console.log("Generated displayed prompt:", parsed.displayedPrompt);
       // console.log("Generated original prompt:", parsed.originalPrompt);
+
       res.json({
         imagePrompt: {
           displayedPrompt: parsed.displayedPrompt || "",
@@ -248,6 +337,7 @@ const imageRoutes = (app) => {
       );
 
       //console.log("Initial image description plan:", initialPlan);
+
       const parsed = parseResponse(
         await describePNGImage({
           imageBuffer,
@@ -258,22 +348,47 @@ const imageRoutes = (app) => {
         }),
       );
 
+      const biasedImageDescriptionParagraphPlan = normalizePlan(
+        parsed.biasedImageDescriptionParagraphPlan,
+        selectedImageBiasCategories,
+        initialPlan,
+      );
+
+      const reviewed = parseResponse(
+        await reviewImageBiases(
+          buildPromptForImageBiasReview(
+            parsed.imageDescriptionParagraphs || [],
+            selectedImageBiasCategories,
+            biasedImageDescriptionParagraphPlan,
+          ),
+        ),
+      );
+
+      const reviewedBiasedImageDescriptionParagraphPlan = normalizePlan(
+        reviewed.biasedImageDescriptionParagraphPlan,
+        selectedImageBiasCategories,
+        biasedImageDescriptionParagraphPlan,
+      );
+
       // console.log(
       //   "Image description paragraphs:",
-      //   parsed.imageDescriptionParagraphs,
+      //   reviewed.imageDescriptionParagraphs ||
+      //     parsed.imageDescriptionParagraphs,
       // );
+
       // console.log(
       //   "Biased image description paragraph plan:",
-      //   parsed.biasedImageDescriptionParagraphPlan,
+      //   reviewedBiasedImageDescriptionParagraphPlan,
       // );
+
       res.json({
         imageBase64: `data:image/jpeg;base64,${imageBuffer.toString("base64")}`,
-        imageDescriptionParagraphs: parsed.imageDescriptionParagraphs || [],
-        biasedImageDescriptionParagraphPlan: normalizePlan(
-          parsed.biasedImageDescriptionParagraphPlan,
-          selectedImageBiasCategories,
-          initialPlan,
-        ),
+        imageDescriptionParagraphs:
+          reviewed.imageDescriptionParagraphs ||
+          parsed.imageDescriptionParagraphs ||
+          [],
+        biasedImageDescriptionParagraphPlan:
+          reviewedBiasedImageDescriptionParagraphPlan,
       });
     } catch (error) {
       console.error("Error getting image description:", error);

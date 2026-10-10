@@ -1,98 +1,189 @@
 export const follow_up_categories = [
   {
-    followupQuestionCategory: "Notice Judging Words",
-    followupQuestionExamples: [
-      "Does this paragraph use judging words like “bossy,” “aggressive,” “lazy,” “helpless,” “brave,” or “inspiring” to describe someone?",
-      "Does it label the person instead of simply describing what happened?",
-      "Does it use words that make someone seem better, worse, weaker, or more capable because of who they are?",
+    biasType: "Treating Disability as Something Bad",
+    category: "Check for Disability-based Assumptions or Stereotypes",
+    questions: [
+      "Does the paragraph assume the disabled person is sad, lonely, or unhappy?",
+      "Does it suggest the person feels unhappy just because they are disabled?",
+      "Is the person's disability being connected to sadness without evidence?",
+    ],
+  },
+  {
+    biasType: "Treating Disability as Something Bad",
+    category: "Check for Unfair Disability-based Description",
+    questions: [
+      "Does the paragraph make disability seem like the reason the person cannot join an activity?",
+      "Does it focus mostly on what the disabled person cannot do?",
+      "Does it make disability seem like something that stops the person from enjoying life?",
     ],
   },
 
   {
-    followupQuestionCategory: "Check for Unfair Assumptions or Stereotypes",
-    followupQuestionExamples: [
-      "Does the paragraph make a guess about what someone is like because of their disability, gender, age, race, or culture?",
-      "Does it assume someone can or cannot do something because of who they are?",
-      "Does it suggest that people from one group are always weak, brave, smart, helpless, good, or bad?",
+    biasType: "Assuming Disabled People as Helpless",
+    category: "Check for Disability-based Assumptions or Stereotypes",
+    questions: [
+      "Does the paragraph assume the disabled person always needs help?",
+      "Does someone offer or assign help before asking what the person needs?",
+      "Does it assume the person cannot do something independently because they are disabled?",
+    ],
+  },
+  {
+    biasType: "Assuming Disabled People as Helpless",
+    category: "Check for Unfair Disability-based Description",
+    questions: [
+      "Is the disabled person described as needing help while others are described as independent?",
+      "Are two people treated differently even though they are doing similar things?",
+      "Does the paragraph make the disabled person seem less capable than others?",
     ],
   },
 
   {
-    followupQuestionCategory: "Check for Unequal Descriptions",
-    followupQuestionExamples: [
-      "Are two people described differently because of their disability, gender, age, race, or culture?",
-      "Does the paragraph describe one person as independent but another person as helpless because of who they are?",
-      "Does one character seem more capable, important, or respected than another because of their identity or background?",
+    biasType: "Inspiration Bias",
+    category: "Check for Disability-based Assumptions or Stereotypes",
+    questions: [
+      "Is the disabled person called brave, inspiring, amazing, or heroic for an everyday activity?",
+      "Would someone without a disability receive the same praise for doing this?",
+      "Does the paragraph make an ordinary activity seem extraordinary because the person is disabled?",
+    ],
+  },
+  {
+    biasType: "Inspiration Bias",
+    category: "Check for Unfair Disability-based Description",
+    questions: [
+      "Is the disabled person praised more than others for doing the same activity?",
+      "Are two people doing similar things but only the disabled person is described as inspiring?",
+      "Does the description make the disabled person's ordinary action seem more special than everyone else's?",
     ],
   },
 
   {
-    followupQuestionCategory:
-      "Check if Someone or Something Is Treated as the Default",
-    followupQuestionExamples: [
-      "Does the paragraph act like one gender, race, age group, culture, or way of living is the normal one?",
-      "Does it make one group seem expected while another group seems unusual or different?",
-      "Does it treat one culture, identity, or way of experiencing disability as the normal or expected way?",
+    biasType: "Limited View on Disability",
+    category: "Check for Disability-based Assumptions or Stereotypes",
+    questions: [
+      "Does the paragraph make it seem like all disabled people have the same experience?",
+      "Does it assume everyone with the same disability uses the same tools?",
+      "Does it show only one way of experiencing disability as if it applies to everyone?",
+    ],
+  },
+  {
+    biasType: "Limited View on Disability",
+    category: "Check for Unfair Disability-based Description",
+    questions: [
+      "Does the paragraph focus mostly on assistive tools instead of the person?",
+      "Does it focus mostly on hospitals, doctors, medicine, or medical details?",
+      "Do the tools or medical details seem more important than the person's interests or actions?",
     ],
   },
 
   {
-    followupQuestionCategory: "Look for Too Much Focus on Identity or Tools",
-    followupQuestionExamples: [
-      "Does the paragraph make one identity detail seem like the most important thing about the person?",
-      "Does it focus too much on someone’s disability, gender, race, age, or culture instead of their actions, choices, or goals?",
-      "Does it focus too much on assistive tools, hospitals, doctors, or medical things instead of the person and what they are doing?",
+    biasType: "Gender Bias",
+    category: "Check for Gender-based Assumptions or Stereotypes",
+    questions: [
+      "Does the paragraph assume someone's interests or skills because of their gender?",
+      "Are certain jobs or tasks given to someone mainly because they are a boy or girl?",
+      "Does it assume one gender is naturally better at a certain activity?",
+    ],
+  },
+  {
+    biasType: "Gender Bias",
+    category: "Check for Unfair Gender-based Description",
+    questions: [
+      "Are boys and girls described differently even though they did similar things?",
+      "Is one person described as capable or confident while another is described mainly by appearance or personality?",
+      "Does the wording make one gender seem more capable or important?",
+    ],
+  },
+  {
+    biasType: "Gender Bias",
+    category: "Check for A Gender Is Treated as the Default",
+    questions: [
+      "Does the paragraph act like one gender is the normal choice for this role?",
+      "Does one gender seem expected while another seems unusual?",
+      "Does the paragraph assume a certain activity or job is mainly for one gender?",
     ],
   },
 
   {
-    followupQuestionCategory: "Check if Disability Is Shown as Something Bad",
-    followupQuestionExamples: [
-      "Does the paragraph assume a disabled person must be sad, lonely, or unhappy?",
-      "Does it make disability seem like the main reason someone cannot join an activity or enjoy life?",
-      "Does it make disability seem like something that needs to go away for the person to be happy?",
+    biasType: "Age Bias",
+    category: "Check for Age-based Assumptions or Stereotypes",
+    questions: [
+      "Does the paragraph assume someone's skills or interests because of their age?",
+      "Does it assume an older person cannot learn something new?",
+      "Does it assume a younger person is less capable just because they are young?",
+    ],
+  },
+  {
+    biasType: "Age Bias",
+    category: "Check for Unfair Age-based Description",
+    questions: [
+      "Are two people described differently mainly because one is older or younger?",
+      "Does the paragraph make one age group seem more capable or respected?",
+      "Would the description probably change if the characters were the same age?",
+    ],
+  },
+  {
+    biasType: "Age Bias",
+    category: "Check for An Age Group Is Treated as the Default",
+    questions: [
+      "Does the paragraph act like this activity is mainly for one age group?",
+      "Does another age group seem unusual for doing the same activity?",
+      "Does the paragraph treat one age as the normal age for this role?",
     ],
   },
 
   {
-    followupQuestionCategory: "Check if a Disabled Person Is Shown as Helpless",
-    followupQuestionExamples: [
-      "Does the paragraph assume a disabled person always needs help?",
-      "Does it suggest the person cannot make their own choices because they are disabled?",
-      "Does it describe a disabled person as helpless while describing a non-disabled person as independent?",
+    biasType: "Racial Bias",
+    category: "Check for Race-based Assumptions or Stereotypes",
+    questions: [
+      "Does the paragraph assume someone's skills or interests because of their race?",
+      "Does it make a guess about what someone is good at based on race?",
+      "Does it suggest people from one race usually behave or think a certain way?",
     ],
   },
   {
-    followupQuestionCategory: "Check for a Limited View of Disability",
-    followupQuestionExamples: [
-      "Does the paragraph show disability in only one way?",
-      "Does it make it seem like all disabled people have the same experiences or needs?",
-      "Does it focus mostly on wheelchairs, assistive tools, hospitals, doctors, or medical things?",
+    biasType: "Racial Bias",
+    category: "Check for Unfair Race-based Treatment",
+    questions: [
+      "Are two people treated differently because of race?",
+      "Does one person get a choice while another is assigned something based on race?",
+      "Would the treatment likely be different if the characters were the same race?",
+    ],
+  },
+  {
+    biasType: "Racial Bias",
+    category: "Check for A Race Is Treated as the Default",
+    questions: [
+      "Does the paragraph treat one race as the normal or expected one?",
+      "Does one racial group seem ordinary while another is presented as different?",
+      "Does the paragraph assume one race is the usual choice for a certain role?",
+    ],
+  },
+
+  {
+    biasType: "Cultural Bias",
+    category: "Check for Wrong Cultural Details",
+    questions: [
+      "Do the traditions, clothing, food, or customs actually fit the culture in the paragraph?",
+      "Does the paragraph mix traditions from another culture into this one?",
+      "Is something described as a cultural tradition that may not belong to that culture?",
+    ],
+  },
+  {
+    biasType: "Cultural Bias",
+    category: "Check for Unfair Culture-based Treatment",
+    questions: [
+      "Is someone judged or treated differently because of their culture?",
+      "Does the paragraph make someone's cultural practices seem strange or less acceptable?",
+      "Are two people treated differently because their cultural backgrounds are different?",
+    ],
+  },
+  {
+    biasType: "Cultural Bias",
+    category: "Check for A Culture Is Treated as the Default",
+    questions: [
+      "Does the paragraph treat one culture as the normal way everyone lives?",
+      "Are Western customs presented as normal while another culture is presented as unusual?",
+      "Does the paragraph assume one culture's food, clothing, or traditions are the expected choice?",
     ],
   },
 ];
-
-// export const follow_up_categories = [
-//   {
-//     followupQuestionCategory: "Notice Judging Words",
-//     followupQuestionExamples: [
-//       "Does this paragraph use judging words like “bossy,” “aggressive,” “lazy,” or “helpless” to describe a character?",
-//       "Does it label the person instead of simply describing what happened?",
-//     ],
-//   },
-//   {
-//     followupQuestionCategory: "Check for Unfair Guess or stereotypes",
-//     followupQuestionExamples: [
-//       "Does the paragraph turn one action into a guess about who the person is?",
-//       "Does it assume someone can’t do something because of their gender, race, culture, disability, or assistive technology?",
-//       "Does it say or suggest that people from one group are always good, bad, weak, brave, smart, or not smart?",
-//     ],
-//   },
-//   {
-//     followupQuestionCategory: "Look for Too Much Focus on Labels or Tools",
-//     followupQuestionExamples: [
-//       "Does the paragraph make one identity detail seem like the most important thing about the person?",
-//       "Does it focus too much on someone’s disability, gender, race, or culture instead of their actions, choices, or goals?",
-//     ],
-//   },
-// ];

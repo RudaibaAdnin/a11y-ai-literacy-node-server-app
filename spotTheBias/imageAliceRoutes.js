@@ -3,72 +3,36 @@ import {
   getFollowUpReply,
   getClue,
 } from "../util/openAIServices.js";
+
 import { follow_up_categories } from "../util/storyFollowUpCategories.js";
+
+import { story_bias_checking_categories } from "../util/storyBiasCheckingCategories.js";
 
 const parseResponse = (response) => JSON.parse(response);
 
-const pickRandom = (items, count) =>
-  [...items].sort(() => Math.random() - 0.5).slice(0, count);
-
-const categoryText = (biasCategoryImage) => {
+const getBiasName = (biasCategoryImage) => {
   if (!biasCategoryImage) {
     throw new Error("Missing biasCategoryImage in request body.");
   }
 
-  if (typeof biasCategoryImage === "string") {
-    return JSON.stringify({
-      name: biasCategoryImage,
-      meaning: "",
-      examples: [],
-    });
-  }
+  return typeof biasCategoryImage === "string"
+    ? biasCategoryImage
+    : biasCategoryImage.name || "";
+};
+
+const categoryText = (biasCategoryImage) => {
+  const biasName = getBiasName(biasCategoryImage);
 
   return JSON.stringify({
-    name: biasCategoryImage.name || "",
-    meaning: biasCategoryImage.meaning || "",
-    examples: biasCategoryImage.examples || [],
+    name: biasName,
+    Categories: story_bias_checking_categories[biasName]?.Categories || [],
   });
 };
 
-const genericFollowUpCategoryNames = [
-  "Notice Judging Words",
-  "Check for Unfair Guesses or Stereotypes",
-  "Check for Unequal Descriptions",
-  "Check if Someone or Something Is Treated as the Default",
-  "Look for Too Much Focus on Identity or Tools",
-];
-
-const disabilitySpecificCategoryNames = {
-  "Treating Disability as Something Bad": [
-    "Check if Disability Is Shown as Something Bad",
-  ],
-  "Assuming Disabled People as Helpless": [
-    "Check if a Disabled Person Is Shown as Helpless",
-  ],
-  "Limited View on Disability": ["Check for a Limited View of Disability"],
-};
-
 const getFollowUpCategoriesForImageBias = (biasCategoryImage) => {
-  const biasName =
-    typeof biasCategoryImage === "string"
-      ? biasCategoryImage
-      : biasCategoryImage?.name || "";
+  const biasName = getBiasName(biasCategoryImage);
 
-  const genericCategories = follow_up_categories.filter((category) =>
-    genericFollowUpCategoryNames.includes(category.followupQuestionCategory),
-  );
-
-  const specificCategoryNames = disabilitySpecificCategoryNames[biasName] || [];
-
-  const specificCategories = follow_up_categories.filter((category) =>
-    specificCategoryNames.includes(category.followupQuestionCategory),
-  );
-
-  if (specificCategories.length > 0) {
-    return [...specificCategories, ...pickRandom(genericCategories, 2)];
-  }
-
-  return pickRandom(genericCategories, 3);
+  return follow_up_categories.filter((item) => item.biasType === biasName);
 };
 
 const buildPromptForImageBiasClue = (
@@ -80,13 +44,22 @@ You are Alice, an AI clue helper for children ages 10-14.
 Image description paragraph:
 ${JSON.stringify(imageDescriptionParagraph)}
 
-Hidden image bias category:
+Hidden image bias type and checking categories:
 ${categoryText(biasCategoryImage)}
 
-Write one short clue that helps the child think critically about the image description paragraph.
-Do not directly say the bias category name.
-Do not reveal the answer.
-Use simple, playful language.
+First, determine which checking category best matches what is happening in the image description paragraph.
+
+Then write one short clue that helps the child notice that issue.
+
+Rules:
+- Base the clue on the checking category that actually appears in the paragraph.
+- Do not directly say the hidden bias type.
+- Do not directly say the checking category name.
+- Do not reveal the answer.
+- Point the child toward the relevant assumption, description, treatment, cultural detail, or default.
+- Use simple, playful language.
+- Keep the clue short.
+
 Return only the clue as a string.
 `;
 
@@ -95,7 +68,8 @@ const buildPromptForImageBiasFollowups = (
   biasCategoryImage,
   clueImage,
 ) => {
-  const chosenCategories = getFollowUpCategoriesForImageBias(biasCategoryImage);
+  const matchingCategories =
+    getFollowUpCategoriesForImageBias(biasCategoryImage);
 
   return `
 You are Alice, an AI helper for children ages 10-14.
@@ -103,35 +77,51 @@ You are Alice, an AI helper for children ages 10-14.
 Image description paragraph:
 ${JSON.stringify(imageDescriptionParagraph)}
 
-Hidden image bias category:
+Hidden image bias type and checking categories:
 ${categoryText(biasCategoryImage)}
 
 Clue:
 ${JSON.stringify(clueImage)}
 
-Generate exactly 3 follow-up questions that help the child investigate the possible image bias.
-Each question must use one of the 3 categories below.
+Below are the follow-up categories for this hidden image bias type.
 
-Categories + example styles:
-${chosenCategories
+Follow-up categories:
+${matchingCategories
   .map(
     (item, index) =>
-      `${index + 1}) ${item.followupQuestionCategory}\nExamples:\n- ${item.followupQuestionExamples.join("\n- ")}`,
+      `${index + 1}) Category: ${item.category}
+Example questions:
+- ${item.questions.join("\n- ")}`,
   )
   .join("\n\n")}
 
-Keep each question short, clear, and child-friendly.
+Generate ONE follow-up question for EACH category listed above.
+
+Rules:
+- Every listed category must appear exactly once.
+- Do not repeat a category.
+- Do not skip a category.
+- Generate only one question for each category.
+- Use the example questions as guidance.
+- Adapt each question to the exact image description paragraph when helpful.
+- Keep the same checking purpose as the examples.
+- Keep each question short, clear, and child-friendly.
+- Do not directly reveal the hidden bias type.
+- Do not directly give the child the answer.
+- The "category" field must exactly match the category title listed above, including "Check for".
+
+If there are 2 categories, return exactly 2 questions.
+If there are 3 categories, return exactly 3 questions.
 
 Return ONLY raw JSON in this exact shape:
 {
   "followUp": [
-    { "category": "<category1>", "question": "<question1>" },
-    { "category": "<category2>", "question": "<question2>" },
-    { "category": "<category3>", "question": "<question3>" }
+    {
+      "category": "<exact category title>",
+      "question": "<question>"
+    }
   ]
 }
-
-Make sure the categories in the JSON exactly match the 3 category titles above.
 `;
 };
 
@@ -146,7 +136,7 @@ You are Alice, an AI helper for children ages 10-14.
 Image description paragraph:
 ${JSON.stringify(imageDescriptionParagraph)}
 
-Hidden image bias category:
+Hidden image bias type and checking categories:
 ${categoryText(biasCategoryImage)}
 
 Clue:
@@ -155,10 +145,18 @@ ${JSON.stringify(clueImage)}
 Child's follow-up question:
 ${JSON.stringify(followUpQuestionImage)}
 
-Answer the question in a helpful way.
-Help the child think about possible image bias, but do not directly give away the answer too quickly.
-Keep the reply under 60 words.
-Use simple, conversational language.
+Answer the child's question using the checking categories above to understand what is happening in the image description paragraph.
+
+Rules:
+- Answer based on the specific image description paragraph.
+- Help the child notice the relevant assumption, unequal description, treatment, default, or cultural detail.
+- Do not directly name the hidden bias type.
+- Do not directly name the checking category unless needed to answer the child's question.
+- Do not give away the answer too quickly.
+- Encourage the child to examine the wording or details in the paragraph.
+- Keep the reply under 60 words.
+- Use simple, conversational language.
+
 Return only the reply as a string.
 `;
 
@@ -187,10 +185,15 @@ const imageAliceRoutes = (app) => {
         ),
       );
 
-      res.json({ clueImage });
+      res.json({
+        clueImage,
+      });
     } catch (error) {
       console.error("Error generating image bias clue:", error);
-      res.status(500).json({ error: "Failed to get image bias clue." });
+
+      res.status(500).json({
+        error: "Failed to get image bias clue.",
+      });
     }
   });
 
@@ -199,27 +202,45 @@ const imageAliceRoutes = (app) => {
       const { imageDescriptionParagraph, biasCategoryImage, clueImage } =
         req.body;
 
-      const parsed = parseResponse(
-        await getFollowUpQuestions(
-          buildPromptForImageBiasFollowups(
-            imageDescriptionParagraph,
-            biasCategoryImage,
-            clueImage,
-          ),
+      const matchingCategories =
+        getFollowUpCategoriesForImageBias(biasCategoryImage);
+
+      const response = await getFollowUpQuestions(
+        buildPromptForImageBiasFollowups(
+          imageDescriptionParagraph,
+          biasCategoryImage,
+          clueImage,
         ),
       );
 
+      const parsed = parseResponse(response);
+
+      const generatedFollowUp = Array.isArray(parsed.followUp)
+        ? parsed.followUp
+        : [];
+
+      const followUp = matchingCategories.map((categoryItem) => {
+        const generatedItem = generatedFollowUp.find(
+          (item) => item.category === categoryItem.category,
+        );
+
+        return {
+          category: categoryItem.category,
+          question: generatedItem?.question || categoryItem.questions[0] || "",
+        };
+      });
+
       res.json({
-        followUpQuestionCategoriesImage: parsed.followUp.map(
-          (item) => item.category,
-        ),
-        followUpQuestionsImage: parsed.followUp.map((item) => item.question),
+        followUpQuestionCategoriesImage: followUp.map((item) => item.category),
+
+        followUpQuestionsImage: followUp.map((item) => item.question),
       });
     } catch (error) {
       console.error("Error generating image bias follow-up questions:", error);
-      res
-        .status(500)
-        .json({ error: "Failed to get image bias follow-up questions." });
+
+      res.status(500).json({
+        error: "Failed to get image bias follow-up questions.",
+      });
     }
   });
 
@@ -241,12 +262,15 @@ const imageAliceRoutes = (app) => {
         ),
       );
 
-      res.json({ followUpReplyImage });
+      res.json({
+        followUpReplyImage,
+      });
     } catch (error) {
       console.error("Error generating image bias follow-up reply:", error);
-      res
-        .status(500)
-        .json({ error: "Failed to get image bias follow-up reply." });
+
+      res.status(500).json({
+        error: "Failed to get image bias follow-up reply.",
+      });
     }
   });
 };

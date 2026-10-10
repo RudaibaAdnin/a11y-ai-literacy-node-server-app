@@ -104,6 +104,46 @@ export const getCraftPromptSuggestions = async (userMessage) => {
   return response.choices[0].message.content;
 };
 
+export const reviewImageBiases = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a careful AI image-description bias reviewer. Review whether the planned image-description paragraphs contain their assigned bias categories using the provided checking criteria. Return only valid JSON.",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};
+
+export const reviewStoryBiases = async (userMessage) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4.1",
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a careful AI story bias reviewer. Review whether the planned story paragraphs contain their assigned bias categories using the provided bias-checking criteria. Return only valid JSON.",
+      },
+      {
+        role: "user",
+        content: userMessage,
+      },
+    ],
+  });
+
+  return response.choices[0].message.content;
+};
+
 export const getStoryReading = async (userMessage) => {
   const response = await openai.chat.completions.create({
     model: "gpt-4.1",
