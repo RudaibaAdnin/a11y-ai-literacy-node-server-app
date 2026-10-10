@@ -10,7 +10,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Treating Disability as Something Bad",
-    category: "Check for Unfair Disability-based Description",
+    category: "Check for Unequal Disability-based Description",
     questions: [
       "Does the paragraph make disability seem like the reason the person cannot join an activity?",
       "Does it focus mostly on what the disabled person cannot do?",
@@ -29,7 +29,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Assuming Disabled People as Helpless",
-    category: "Check for Unfair Disability-based Description",
+    category: "Check for Unequal Disability-based Description",
     questions: [
       "Is the disabled person described as needing help while others are described as independent?",
       "Are two people treated differently even though they are doing similar things?",
@@ -48,7 +48,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Inspiration Bias",
-    category: "Check for Unfair Disability-based Description",
+    category: "Check for Unequal Disability-based Description",
     questions: [
       "Is the disabled person praised more than others for doing the same activity?",
       "Are two people doing similar things but only the disabled person is described as inspiring?",
@@ -67,7 +67,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Limited View on Disability",
-    category: "Check for Unfair Disability-based Description",
+    category: "Check for Unequal Disability-based Description",
     questions: [
       "Does the paragraph focus mostly on assistive tools instead of the person?",
       "Does it focus mostly on hospitals, doctors, medicine, or medical details?",
@@ -86,7 +86,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Gender Bias",
-    category: "Check for Unfair Gender-based Description",
+    category: "Check for Unequal Gender-based Description",
     questions: [
       "Are boys and girls described differently even though they did similar things?",
       "Is one person described as capable or confident while another is described mainly by appearance or personality?",
@@ -114,7 +114,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Age Bias",
-    category: "Check for Unfair Age-based Description",
+    category: "Check for Unequal Age-based Description",
     questions: [
       "Are two people described differently mainly because one is older or younger?",
       "Does the paragraph make one age group seem more capable or respected?",
@@ -142,7 +142,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Racial Bias",
-    category: "Check for Unfair Race-based Treatment",
+    category: "Check for Unequal Race-based Treatment",
     questions: [
       "Are two people treated differently because of race?",
       "Does one person get a choice while another is assigned something based on race?",
@@ -170,7 +170,7 @@ export const follow_up_categories = [
   },
   {
     biasType: "Cultural Bias",
-    category: "Check for Unfair Culture-based Treatment",
+    category: "Check for Unequal Culture-based Treatment",
     questions: [
       "Is someone judged or treated differently because of their culture?",
       "Does the paragraph make someone's cultural practices seem strange or less acceptable?",

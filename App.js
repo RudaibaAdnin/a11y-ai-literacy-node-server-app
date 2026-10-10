@@ -10,11 +10,13 @@ import storyQuestionRoutes from "./spotTheBias/storyQuestionRoutes.js";
 
 import storyReadingRoutes from "./spotTheBias/storyReadingRoutes.js";
 import storyAliceRoutes from "./spotTheBias/storyAliceRoutes.js";
+import storyBiasCheckingRoutes from "./spotTheBias/storyBiasCheckingRoutes.js";
 import storyCraftPromptRoutes from "./spotTheBias/storyCraftPromptRoutes.js";
 import storyReviewRoutes from "./spotTheBias/storyReviewRoutes.js";
 
 import imageRoutes from "./spotTheBias/imageRoutes.js";
 import imageAliceRoutes from "./spotTheBias/imageAliceRoutes.js";
+import imageBiasCheckingRoutes from "./spotTheBias/imageBiasCheckingRoutes.js";
 import imageReviewRoutes from "./spotTheBias/imageReviewRoutes.js";
 import imageCraftPromptRoutes from "./spotTheBias/imageCraftPromptRoutes.js";
 
@@ -31,11 +33,13 @@ storyQuestionRoutes(app);
 
 storyReadingRoutes(app);
 storyAliceRoutes(app);
+storyBiasCheckingRoutes(app);
 storyCraftPromptRoutes(app);
 storyReviewRoutes(app);
 
 imageRoutes(app);
 imageAliceRoutes(app);
+imageBiasCheckingRoutes(app);
 imageReviewRoutes(app);
 imageCraftPromptRoutes(app);
 
