@@ -87,13 +87,16 @@ Rules:
 - For each selected bias category, create the biased paragraph in an almost same or similar way to the provided examples.
 - Keep the type of assumption, treatment, description, or situation similar to the examples.
 - Adapt the characters, setting, actions, and details so the paragraph fits the story topic and story planning answers.
-- Do not copy the example word-for-word.
+- can copy the example word-for-word.
 - Prefer creating a close variation of the provided examples instead of creating a completely different kind of bias.
+- Keep the bias implicit. Show it only through a character's action, assumption, description, or treatment.
+- Do not add a concluding sentence that explains, evaluates, corrects, or draws attention to the biased behavior.
+- End the paragraph naturally after the biased action or statement when possible.
+- Do not describe how the affected character feels about the biased treatment.
 - Include every provided bias category exactly once.
 - Each bias category must appear in exactly one paragraph.
 - Do not intentionally include any of the other listed bias categories in the remaining paragraphs.
 - A paragraph should contain at most one planned bias category.
-- Make the bias noticeable but not too obvious.
 - Do not use slurs, hateful language, or the words "bias", "biased", or the bias category names.
 - Paragraph indices start at 0.
 - Before returning, recheck whether each planned paragraph really contains its assigned bias.
@@ -166,7 +169,10 @@ If the assigned bias is not clearly present in any paragraph:
 - Make the smallest possible change needed.
 - Keep the same characters, setting, actions, and surrounding story context.
 - Make the paragraph clearly match at least one of the checking categories for the assigned bias.
-- Keep the bias noticeable but not too obvious.
+- Keep the bias implicit. Show it only through a character's action, assumption, description, or treatment.
+- Do not add a concluding sentence that explains, evaluates, corrects, or draws attention to the biased behavior.
+- End the paragraph naturally after the biased action or statement when possible.
+- Do not describe how the affected character feels about the biased treatment.
 
 Important:
 - Do not rewrite paragraphs unless needed.

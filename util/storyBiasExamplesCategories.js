@@ -37,7 +37,7 @@ export const story_bias_categoriesExamples = {
   "Assuming Disabled People as Helpless": {
     Examples: [
       "Liam, a blind student, joined a group project in science class. Liam generally used his screen reader to read materials on his computer. The teacher assigned another student to read everything for him. The group began working. Liam listened to the materials being read aloud. ",
-      "Mia, a blind visitor, arrived at a museum with her friend. Mia was excitedly telling her friend which dinosaur exhibit she wanted to visit first. A staff member greeted them. The staff member suddenly asked Mia’s friend what kind of help Mia would need.",
+      "Mira, a blind visitor, arrived at a museum with her friend. Mira was excitedly telling her friend which dinosaur exhibit she wanted to visit first. A staff member greeted them. The staff member asked Mia’s friend what kind of help Mia would need.",
     ],
   },
 
