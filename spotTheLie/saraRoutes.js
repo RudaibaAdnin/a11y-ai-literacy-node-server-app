@@ -5,6 +5,10 @@ import {
 } from "../util/openAIServices.js";
 import { followUpQuestionCategory } from "./followUpQuestionCategory.js";
 
+const chooseCategories = () =>
+  Object.values(followUpQuestionCategory).map(
+    (categories) => categories[Math.floor(Math.random() * categories.length)],
+  );
 const accuratePrompt =
   "Given an image description and a follow-up question asked by a blind or low-vision user, provide a clear, direct response. Use a natural and informative tone.\n" +
   "Help improve understanding or highlight uncertainty without making assumptions.\n" +
@@ -59,8 +63,10 @@ const chooseReplyTypePrompt = () => {
 };
 
 const buildPromptForEntireDescriptionFollowup = (imageDescription) => {
-  const chosenHallucinationType = chooseHallucinationType();
-  const chosenCategories = followUpQuestionCategory[chosenHallucinationType];
+  const chosenHallucinationType = Object.keys(followUpQuestionCategory).join(
+    ", ",
+  );
+  const chosenCategories = chooseCategories();
 
   return (
     "You are helping a blind or low-vision user verify the OVERALL image description.\n" +
@@ -87,8 +93,10 @@ const buildPromptForCurrentLineFollowup = (
   currentImageDescriptionLine,
   imageDescription,
 ) => {
-  const chosenHallucinationType = chooseHallucinationType();
-  const chosenCategories = followUpQuestionCategory[chosenHallucinationType];
+  const chosenHallucinationType = Object.keys(followUpQuestionCategory).join(
+    ", ",
+  );
+  const chosenCategories = chooseCategories();
 
   return (
     "You are helping a blind or low-vision user verify the OVERALL image description.\n" +
@@ -116,8 +124,10 @@ const buildPromptForClueHallucinationFollowup = (
   imageHallucinationLine,
   clue = "",
 ) => {
-  const chosenHallucinationType = chooseHallucinationType();
-  const chosenCategories = followUpQuestionCategory[chosenHallucinationType];
+  const chosenHallucinationType = Object.keys(followUpQuestionCategory).join(
+    ", ",
+  );
+  const chosenCategories = chooseCategories();
 
   return (
     "Given an image description and a hallucination sentence, generate 3 follow-up questions that " +

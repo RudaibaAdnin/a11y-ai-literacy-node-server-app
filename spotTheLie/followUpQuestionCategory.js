@@ -1,14 +1,14 @@
 export const followUpQuestionCategory = {
   "Mixed-up facts": [
     {
-      category: "Ask Sara to Check the Fact Again",
+      category: "Ask Sara to Double-Check Facts",
       examples: [
         "Check the color again and describe it.",
         "Check the shape again and describe it.",
       ],
     },
     {
-      category: "Ask for Clear Details About the Fact",
+      category: "Ask Sara for Clear Details About a Fact",
       examples: [
         "What exact color is the shirt?",
         "List all the colors you see on the shirt.",
@@ -16,7 +16,7 @@ export const followUpQuestionCategory = {
       ],
     },
     {
-      category: "Check if the Detail Stays the Same",
+      category: "Check Consistency within a Detail",
       examples: ["Are all parts of the shirt the same color?"],
     },
   ],
@@ -32,7 +32,7 @@ export const followUpQuestionCategory = {
       ],
     },
     {
-      category: "Check if the Detail Fits the Image",
+      category: "Check for Mismatch in Detail",
       examples: [
         "Are there enough details in the image to answer this?",
         "Does this information fit with what is shown in the image?",
@@ -49,7 +49,7 @@ export const followUpQuestionCategory = {
 
   "Wrong guess": [
     {
-      category: "Ask Sara to Explain the Steps",
+      category: "Ask for Reasoning Steps",
       examples: [
         "How did you figure out the region from the license plate?",
         "Explain your steps one by one.",
@@ -58,7 +58,7 @@ export const followUpQuestionCategory = {
       ],
     },
     {
-      category: "Ask Sara What It Sees and What It Is Guessing",
+      category: "Ask Sara What It Is Assuming",
       examples: [
         "What can you actually see in the image, and what part are you guessing?",
         "Is this based only on the image, or on general knowledge?",
