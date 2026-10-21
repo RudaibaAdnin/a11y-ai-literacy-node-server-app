@@ -8,8 +8,8 @@ export const story_bias_categoriesExamples = {
 
   "Age Bias": {
     Examples: [
-      "The class discussed what a new employee might do on their first day at work. The teacher described the employee as a young person starting their career. So, when Mr. Lee, joined the community technology class to learn how to edit videos. The instructor offered him help before he tried the software.",
-      "Everyone described Maya as energetic, creative, and full of fresh ideas. Everyone described Mrs. Patel as sweet, quiet, and impressive for someone her age. Maya and Mrs. Patel both suggested ideas for improving the neighborhood garden. Everyone appreciated their ideas.",
+      "Mr. Lee, and Sara joined the community technology class to learn how to edit videos. The instructor offered Mr Lee help. Mr Lee wanted to use the software himself first. ",
+      "Organizer Mr Lee described Maya as energetic, creative, and full of fresh ideas. Mr Lee described Mrs. Patel as sweet, quiet, and impressive for someone her age. Maya and Mrs. Patel both suggested ideas for improving the neighborhood garden. Everyone appreciated their ideas.",
     ],
   },
 
@@ -21,6 +21,7 @@ export const story_bias_categoriesExamples = {
 
   "Cultural Bias": {
     Examples: [
+      "The Taj Mahal is a large white marble building with a big dome and four tall towers. Inside, the walls are smooth and have words from Abraham Lincoln’s speeches carved into them. There is also a carving of a woman holding a torch high in one hand. Around the Taj Mahal, you can see water and a city skyline.",
       "Priya was preparing for her wedding celebration in India. Everyone wore matching white wedding clothes. During the ceremony, Priya walked down the aisle while guests stood and watched. Afterward, the couple cut a large tiered wedding cake together.",
       "Mia went to Japan for a study project. She was going to celebrate Lunar New Year with a local family. The house was decorated with a tree, stockings, and wrapped gifts near the fireplace. In the morning, the children opened presents while the family gathered for breakfast.",
     ],

@@ -111,7 +111,8 @@ export const story_bias_checking_categories = {
     Categories: [
       {
         name: "Wrong Cultural Details",
-        description: "Add incorrect traditions, clothing, food, or customs.",
+        description:
+          "Add incorrect descriptions, traditions, clothing, food, or customs.",
       },
       {
         name: "Unfair Culture-based Treatment",

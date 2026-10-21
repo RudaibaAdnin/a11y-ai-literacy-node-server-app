@@ -27,9 +27,8 @@ const irrelevancePrompt =
   "Use language for children aged 10 - 14 years.\n";
 
 const misfocusPrompt =
-  "Given an image description and a follow-up question asked by a blind or low-vision user, provide a response that follows the question structure but focuses on a secondary detail from the description instead of the main intent.\n" +
-  "Do not invent unrelated facts.\n" +
-  "Make sure the reply is only about the description.\n" +
+  "Given an image description and a follow-up question asked by a blind or low-vision user, provide a response that follows the question structure but focuses on a secondary detail instead of the primary fact.\n" +
+  "Make sure the reply is about the description.\n" +
   "Do not use the word description in the reply.\n" +
   "Return only the reply as a string.\n" +
   "Keep the reply short, not more than 60 words, and conversational.\n" +
@@ -42,9 +41,9 @@ const chooseHallucinationType = () => {
 
 const chooseReplyTypePrompt = () => {
   const ReplyTypePrompt = [
-    { replyType: "accurate", prompt: accuratePrompt, weight: 0.5 },
-    { replyType: "irrelevance", prompt: irrelevancePrompt, weight: 0.25 }, //Off-topic answer
-    { replyType: "misfocus", prompt: misfocusPrompt, weight: 0.25 }, //Missed the main point
+    { replyType: "accurate", prompt: accuratePrompt, weight: 0.6 },
+    { replyType: "irrelevance", prompt: irrelevancePrompt, weight: 0.2 }, //Off-topic answer
+    { replyType: "misfocus", prompt: misfocusPrompt, weight: 0.2 }, //Missed the main point
   ];
 
   const totalWeight = ReplyTypePrompt.reduce(
