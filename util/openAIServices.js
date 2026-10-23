@@ -8,7 +8,7 @@ const openai = new OpenAI({
 
 export const generateImagePNG = async (prompt) => {
   const response = await openai.images.generate({
-    model: "gpt-image-1",
+    model: "gpt-image-2",
     prompt,
     size: "1024x1024",
     quality: "low",
